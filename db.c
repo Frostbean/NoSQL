@@ -11,21 +11,6 @@ typedef struct NODE {
     struct NODE *next;
 } node;
 
-// char *setKey(char *key, char *buffer);
-// char *setValue(char *key, char *buffer);
-
-// char *setValue(char *buffer) {
-//     size_t len;
-//     char *value;
-//     // what about sizeof
-//     len = strlen(buffer);
-//     // printf("%ld", len);
-//     value = (char *)malloc(len + 1);
-//     strncpy(value,buffer,len);
-//     // printf("%ld", strlen(key));
-//     return value;
-// }
-
 void setKey(node *aNode, const char *buffer) {
     size_t len;
     // what about sizeof
@@ -70,7 +55,6 @@ node *pushNode(node *oldNode) {
     return newNode;
 }
 
-// fine
 node *DBfind(node *const db, const char *const key) {
     node *aNode;
     aNode = db;
@@ -87,7 +71,6 @@ node *DBfind(node *const db, const char *const key) {
     return NULL;
 }
 
-// fine
 // double pointer of value to return the value was got
 void DBget(node *db, const char *key, char **value) {
     const node *aNode = DBfind(db,key);
@@ -102,7 +85,6 @@ void DBget(node *db, const char *key, char **value) {
     // printf("%s\n",*value);
 }
 
-// fine
 node *DBset(node *const db, const char *key, const char *value) {
     node *aNode;
     // if key exist, trouble
@@ -124,7 +106,6 @@ void removeEOL(char *str, size_t len) {
     }
 }
 
-// fine
 void splitInput(const char **splited, char *str, const char *del, int limit) {
     char *s = strtok(str, del);
     int count = 0;
@@ -187,27 +168,6 @@ void readInput(char *input_buffer) {
     // printf("The string is: %s", input_buffer);
 }
 
-void startDB(node *db, char *input_buffer, char **value) {
-    // initial
-    const char *input_splited[INPUT_MAX_WORDS] = {NULL};
-
-    readInput(input_buffer);
-    removeEOL(input_buffer, strlen(input_buffer));
-    splitInput(input_splited, input_buffer, " ", INPUT_MAX_WORDS);
-
-    while (strcmp(input_buffer, "quit")) {
-        // dumpInput(input_splited);
-
-        db = commandExecution(db, input_splited, value);
-
-        readInput(input_buffer);
-        removeEOL(input_buffer, strlen(input_buffer));
-        splitInput(input_splited, input_buffer, " ", INPUT_MAX_WORDS);
-    }
-
-    printf("Leaving...\n");
-}
-
 int main() {
     // initial
     node *db;
@@ -232,69 +192,6 @@ int main() {
     }
 
     printf("Leaving...\n");
-
-    // user input
-
-    // startDB(db, input_buffer, value);
-
-    // readInput(input_buffer);
-
-    // removeEOL(input_buffer, strlen(input_buffer));
-
-    // splitInput(input_splited, input_buffer, " ", INPUT_MAX_WORDS);
-
-    // dumpInput(input_splited);
-
-    // commandExecution(db, input_splited, value);
-
-    // if (streql(input_splited[0], "set")) {
-    //     printf("set...\n");
-    //     if (input_splited[1] != NULL && input_splited[2] != NULL) {
-    //         DBset(db, input_splited[1], input_splited[2]);
-    //     }
-    //     else {
-    //         printf("Missing operand.\n");
-    //     }
-    // }
-    // else if (streql(input_splited[0], "get")) {
-    //     if (input_splited[1] != NULL) {
-    //         DBget(db, input_splited[1], value);
-    //         if (*value == NULL) {
-    //             printf("No corresponding key.\n");
-    //         }
-    //         else {
-    //             printf("Value is %s\n", *value);
-    //         }
-    //     }
-    //     else {
-    //         printf("Missing operand.\n");
-    //     }
-    // }
-    // else {
-    //     printf("Unknown Instruction\n");
-    // }
-
-    // user input end
-
-    // test program
-
-    // db = DBset(db,"abc","cde");
-    // db = DBset(db,"cde","efg");
-    // printf("%ld\n",sizeof(db));
-    // printf("%s %s %p\n",db->key,db->value,db->next);
-    // printf("%p\n",db);
-    // printf("%p\n",DBfind(db,"cde"));
-    // printf("%s %s %p \n",DBfind(db,"cde")->key,DBfind(db,"cde")->value,DBfind(db,"cde")->next);
-    
-    // DBget(db,"abc",&value);
-    // printf("%s\n",value);
-
-    // db = DBset(db,"abc","iii");
-
-    // DBget(db,"abc",&value);
-    // printf("%s\n",value);
-
-    // test program end
 
     return 0;
 }
