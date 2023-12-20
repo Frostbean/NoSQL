@@ -11,28 +11,27 @@ typedef struct NODE {
     struct NODE *next;
 } node;
 
+int streql(const char *str1, const char *str2) {
+    return !strcmp(str1, str2);
+}
+
 void setKey(node *aNode, const char *buffer) {
     size_t len;
     // what about sizeof
     len = strlen(buffer);
-    // printf("%ld", len);
     aNode->key = (char *)malloc(len + 1);
     strncpy(aNode->key,buffer,len);
-    // printf("%ld", strlen(key));
-    // printf("%s",aNode->key);
 }
 
 void setValue(node *aNode, const char *buffer) {
     size_t len;
     // what about sizeof
     len = strlen(buffer);
-    // printf("%ld", len);
     if (aNode->value) {
         free(aNode->value);
     }
     aNode->value = (char *)malloc(len + 1);
     strncpy(aNode->value,buffer,len);
-    // printf("%ld", strlen(key));
 }
 
 node *createNode() {
@@ -51,7 +50,6 @@ node *pushNode(node *oldNode) {
     else {
         newNode->next = oldNode;
     }
-    // newNode->next = oldNode;
     return newNode;
 }
 
@@ -62,8 +60,7 @@ node *DBfind(node *const db, const char *const key) {
         return NULL;
     }
     do {
-        // printf("%d",strcmp(aNode->key,key));
-        if (!strcmp(aNode->key,key)) {
+        if (streql(aNode->key,key)) {
             return aNode;
         }
         aNode = aNode->next;
@@ -82,7 +79,6 @@ void DBget(node *db, const char *key, char **value) {
     size_t len = strlen(aNode->value);
     *value = (char *)realloc(*value, sizeof(len + 1));
     strncpy(*value,aNode->value,len);
-    // printf("%s\n",*value);
 }
 
 node *DBset(node *const db, const char *key, const char *value) {
@@ -115,10 +111,6 @@ void splitInput(const char **splited, char *str, const char *del, int limit) {
         s = strtok(NULL, del);
         count++;
     }
-}
-
-int streql(const char *str1, const char *str2) {
-    return !strcmp(str1, str2);
 }
 
 void dumpInput(const char **str) {
