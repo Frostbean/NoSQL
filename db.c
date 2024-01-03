@@ -4,6 +4,7 @@
 
 #define FGETS_MAX_LENGTH 100
 #define INPUT_MAX_WORDS 5
+#define streql !strcmp
 
 typedef struct NODE {
     char *key;
@@ -11,16 +12,16 @@ typedef struct NODE {
     struct NODE *next;
 } node;
 
-int streql(const char *str1, const char *str2) {
-    return !strcmp(str1, str2);
-}
+// int streql(const char *str1, const char *str2) {
+//     return !strcmp(str1, str2);
+// }
 
 void setKey(node *aNode, const char *buffer) {
     size_t len;
     // what about sizeof
     len = strlen(buffer);
     aNode->key = (char *)malloc(len + 1);
-    strncpy(aNode->key,buffer,len);
+    strncpy(aNode->key,buffer+'\0',len);
 }
 
 void setValue(node *aNode, const char *buffer) {
@@ -31,7 +32,7 @@ void setValue(node *aNode, const char *buffer) {
         free(aNode->value);
     }
     aNode->value = (char *)malloc(len + 1);
-    strncpy(aNode->value,buffer,len);
+    strncpy(aNode->value,buffer+'\0',len);
 }
 
 node *createNode() {
@@ -42,24 +43,30 @@ node *createNode() {
     return newNode;
 }
 
-node *pushNode(node *oldNode) {
+void pushNode(node **oldNode) {
     node *newNode = createNode();
     if (oldNode == NULL) {
-        oldNode = newNode;
+        // *oldNode = newNode;
+        *oldNode = createNode();
     }
     else {
-        newNode->next = oldNode;
+        newNode->next = *oldNode;
+        *oldNode = newNode;
     }
-    return newNode;
 }
 
-node *DBfind(node *const db, const char *const key) {
+// return a single node
+node *DBfind(node **const db, const char *const key) {
     node *aNode;
-    aNode = db;
-    if (aNode == NULL) {
+    if (*db == NULL) {
         return NULL;
     }
+    aNode = *db;
     do {
+        // printf("%s %ld\n", aNode->key, strlen(aNode->key));
+        // printf("%s %ld\n", key, strlen(key));
+        // printf("%d \n", strcmp(aNode->key,key));
+        // printf("%d \n", strcmp(aNode->key,key));
         if (streql(aNode->key,key)) {
             return aNode;
         }
@@ -69,7 +76,7 @@ node *DBfind(node *const db, const char *const key) {
 }
 
 // double pointer of value to return the value was got
-void DBget(node *db, const char *key, char **value) {
+void DBget(node **db, const char *key, char **value) {
     const node *aNode = DBfind(db,key);
     if (aNode == NULL) {
         *value = realloc(*value, 1);
@@ -81,19 +88,17 @@ void DBget(node *db, const char *key, char **value) {
     strncpy(*value,aNode->value,len);
 }
 
-node *DBset(node *const db, const char *key, const char *value) {
+void DBset(node **const db, const char *key, const char *value) {
     node *aNode;
-    // if key exist, trouble
+    
     aNode = DBfind(db,key);
-    if (aNode) {
-        setValue(aNode,value);
-    }
     // if key doesn't exist, create and set newNode
-    aNode = pushNode(db);
-    setKey(aNode,key);
+    if (!aNode) {
+        pushNode(db);
+        aNode = *db;
+        setKey(aNode,key);       
+    }
     setValue(aNode,value);
-    // important, hmm... C on linux doesn't do return check
-    return aNode;
 }
 
 void removeEOL(char *str, size_t len) {
@@ -125,10 +130,10 @@ void dumpInput(const char **str) {
     }
 }
 
-node *commandExecution(node *db, const char **input_splited, char **value) {
+void commandExecution(node **db, const char **input_splited, char **value) {
     if (streql(*(input_splited), "set")) {
         if (*(input_splited+1) != NULL && *(input_splited+2) != NULL) {
-            db = DBset(db, *(input_splited+1), *(input_splited+2));
+            DBset(db, *(input_splited+1), *(input_splited+2));
         }
         else {
             printf("Missing operand.\n");
@@ -138,10 +143,12 @@ node *commandExecution(node *db, const char **input_splited, char **value) {
         if (*(input_splited+1) != NULL) {
             DBget(db, *(input_splited+1), value);
             if (*value == NULL) {
-                printf("No corresponding key.\n");
+                // printf("No corresponding key.\n");
+                printf("(nil)\n");
             }
             else {
-                printf("Value is \"%s\".\n", *value);
+                // printf("Value is \"%s\".\n", *value);
+                printf("\"%s\"\n", *value);
             }
         }
         else {
@@ -151,7 +158,6 @@ node *commandExecution(node *db, const char **input_splited, char **value) {
     else {
         printf("Unknown Instruction\n");
     }
-    return db;
 }
 
 void readInput(char *input_buffer) {
@@ -163,7 +169,7 @@ void readInput(char *input_buffer) {
 int main() {
     // initial
     node *db;
-    char **value = (char **)malloc(0);
+    char *value = (char *)malloc(0);
     db = NULL;
     char input_buffer[100];
     const char *input_splited[INPUT_MAX_WORDS] = {NULL};
@@ -176,14 +182,13 @@ int main() {
     while (strcmp(input_buffer, "quit")) {
         // dumpInput(input_splited);
 
-        db = commandExecution(db, input_splited, value);
+        // db = commandExecution(db, input_splited, value);
+        commandExecution(&db, input_splited, &value);
 
         readInput(input_buffer);
         removeEOL(input_buffer, strlen(input_buffer));
         splitInput(input_splited, input_buffer, " ", INPUT_MAX_WORDS);
     }
-
-    printf("Leaving...\n");
 
     return 0;
 }
