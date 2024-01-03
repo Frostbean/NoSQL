@@ -40,6 +40,7 @@ node *createNode() {
     newNode = (node *)malloc(sizeof(node));
     newNode->key = NULL;
     newNode->value = NULL;
+    newNode->next = NULL;
     return newNode;
 }
 
@@ -55,6 +56,55 @@ void pushNode(node **oldNode) {
     }
 }
 
+void freeNode(node *delNode) {
+    free(delNode->key);
+    free(delNode->value);
+    free(delNode);
+}
+
+void popNode(node **oldNode) {
+    node *delNode = *oldNode;
+    if (oldNode == NULL) {
+        return;
+    }
+    if ((*oldNode)->next == NULL) {
+        *oldNode = NULL;
+        freeNode(delNode);
+        return;
+    }
+    *oldNode = (*oldNode)->next;
+    freeNode(delNode);
+    return;
+}
+
+void delAfterNode(node *oldNode) {
+    node *delNode = oldNode->next;
+    oldNode->next = oldNode->next->next;
+    freeNode(delNode);
+    return;
+}
+
+void DBdelete(node **db, const char *const key) {
+    if (*db == NULL) {
+        return;
+    }
+    if (!strcmp((*db)->key,key)) {
+        popNode(db);
+        return;
+    }
+    node *prev = NULL;
+    node *cur = *db;
+    while (strcmp(cur->key, key) && cur != NULL) {
+        prev = cur;
+        cur = cur->next;
+    }
+    if (cur == NULL) {
+        return;
+    }
+    delAfterNode(prev);
+    return;
+}
+
 // return a single node
 node *DBfind(node **const db, const char *const key) {
     node *aNode;
@@ -63,10 +113,6 @@ node *DBfind(node **const db, const char *const key) {
     }
     aNode = *db;
     do {
-        // printf("%s %ld\n", aNode->key, strlen(aNode->key));
-        // printf("%s %ld\n", key, strlen(key));
-        // printf("%d \n", strcmp(aNode->key,key));
-        // printf("%d \n", strcmp(aNode->key,key));
         if (streql(aNode->key,key)) {
             return aNode;
         }
@@ -76,7 +122,7 @@ node *DBfind(node **const db, const char *const key) {
 }
 
 // double pointer of value to return the value was got
-void DBget(node **db, const char *key, char **value) {
+void DBget(node **db, const char *const key, char **value) {
     const node *aNode = DBfind(db,key);
     if (aNode == NULL) {
         *value = realloc(*value, 1);
@@ -88,7 +134,7 @@ void DBget(node **db, const char *key, char **value) {
     strncpy(*value,aNode->value,len);
 }
 
-void DBset(node **const db, const char *key, const char *value) {
+void DBset(node **const db, const char *const key, const char *value) {
     node *aNode;
     
     aNode = DBfind(db,key);
@@ -150,6 +196,14 @@ void commandExecution(node **db, const char **input_splited, char **value) {
                 // printf("Value is \"%s\".\n", *value);
                 printf("\"%s\"\n", *value);
             }
+        }
+        else {
+            printf("Missing operand.\n");
+        }
+    }
+    else if (streql(*(input_splited), "del")) {
+        if (*(input_splited+1) != NULL) {
+            DBdelete(db, *(input_splited+1));
         }
         else {
             printf("Missing operand.\n");
