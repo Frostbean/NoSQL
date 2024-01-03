@@ -56,13 +56,13 @@ void pushNode(node **oldNode) {
     }
 }
 
-void freeNode(node *delNode) {
+void freeNode(node *const delNode) {
     free(delNode->key);
     free(delNode->value);
     free(delNode);
 }
 
-void popNode(node **oldNode) {
+void popNode(node **const oldNode) {
     node *delNode = *oldNode;
     if (oldNode == NULL) {
         return;
@@ -77,14 +77,14 @@ void popNode(node **oldNode) {
     return;
 }
 
-void delAfterNode(node *oldNode) {
+void delAfterNode(node *const oldNode) {
     node *delNode = oldNode->next;
     oldNode->next = oldNode->next->next;
     freeNode(delNode);
     return;
 }
 
-void DBdelete(node **db, const char *const key) {
+void DBdelete(node **const db, const char *const key) {
     if (*db == NULL) {
         return;
     }
