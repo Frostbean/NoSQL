@@ -244,5 +244,10 @@ int main() {
         splitInput(input_splited, input_buffer, " ", INPUT_MAX_WORDS);
     }
 
+    // clear database
+    while (db != NULL) {
+        popNode(&db);
+    }
+
     return 0;
 }
