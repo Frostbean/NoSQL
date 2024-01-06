@@ -1,10 +1,5 @@
 #include <stdlib.h>
-
-typedef struct NODE {
-    char *key;
-    char *value;
-    struct NODE *next;
-} node;
+#include "link.h"
 
 node *createNode() {
     node *newNode;

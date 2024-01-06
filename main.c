@@ -31,6 +31,7 @@ int main() {
     while (db != NULL) {
         popNode(&db);
     }
+    free(value);
 
     return 0;
 }

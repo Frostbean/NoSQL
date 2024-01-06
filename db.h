@@ -1,6 +1,7 @@
 #ifndef db_c
 #define db_h
 
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include "alloc.h"

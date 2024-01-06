@@ -1,8 +1,8 @@
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include "alloc.h"
-
-#define streql !strcmp
+#include "db.h"
 
 void DBdelete(node **const db, const char *const key) {
     if (*db == NULL) {
@@ -65,4 +65,5 @@ void DBset(node **const db, const char *const key, const char *value) {
         setKey(aNode,key);       
     }
     setValue(aNode,value);
+    printf("OK");
 }
