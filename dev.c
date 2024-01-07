@@ -55,7 +55,7 @@ node *createNode() {
     return aNode;
 }
 
-void lpush(node **leftMost, const char *buffer) {
+void lpush(node **const leftMost, const char *buffer) {
     node *newNode = createNode();
     if (*leftMost == NULL) {
         *leftMost = createNode();
@@ -149,6 +149,22 @@ void DBlrange(const dbObj *const aObj , int lowBound, int highBound) {
     }
 }
 
+void DBlpush(dbObj *aObj ,const char *buffer) {
+    lpush(&(aObj->list.leftMost), buffer);
+}
+
+void DBrpush(dbObj *aObj ,const char *buffer) {
+    rpush(&(aObj->list.rightMost), buffer);
+}
+
+void DBlpop(dbObj *aObj ,char **rValue) {
+    lpop(&(aObj->list.leftMost), rValue);
+}
+
+void DBrpop(dbObj *aObj ,char **rValue) {
+    rpop(&(aObj->list.rightMost), rValue);
+}
+
 int main() {
     char *returnBuffer = (char *)malloc(0);
 
@@ -161,16 +177,18 @@ int main() {
 
     dbObj *aObj = createList();
     setKey(aObj, "111");
-    printf("%s\n", aObj->key);
     setValue(aObj->list.leftMost, "1");
-    printf("%s\n",aObj->list.leftMost->value);
-    lpush(&(aObj->list.leftMost), "2");
-    printf("%s\n",aObj->list.leftMost->right->value);
-    lpush(&(aObj->list.leftMost), "3");
-    lpush(&(aObj->list.leftMost), "4");
+    DBlpush(aObj, "2");
+    DBlpush(aObj, "3");
+    DBlpush(aObj, "4");
+    DBlpush(aObj, "5");
+    DBrpush(aObj, "6");
+    DBlpop(aObj, &returnBuffer);
+    DBrpop(aObj, &returnBuffer);
+    // lpop(&(aObj->list.leftMost), &returnBuffer);
 
     DBllen(aObj);
-    DBlrange(aObj, -3, -2);
+    DBlrange(aObj, 0, 100);
 
     return 0;
 }
