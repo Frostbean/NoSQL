@@ -136,9 +136,9 @@ void freeString(dbObj *const delObj) {
     free(delObj);
 }
 
-void freeNode(dbObj *const delObj) {
+// void freeNode(dbObj *const delObj) {
 
-}
+// }
 
 void freeList(dbObj *const delObj) {
     char *returnBuffer = (char *)malloc(0);
@@ -169,9 +169,14 @@ void popObj(dbObj **const oldObj) {
     return;
 }
 
-// void delAfterNode(node *const oldNode) {
-//     node *delNode = oldNode->next;
-//     oldNode->next = oldNode->next->next;
-//     freeNode(delNode);
-//     return;
-// }
+void delAfterObj(dbObj *const oldObj) {
+    dbObj *delObj = oldObj->next;
+    oldObj->next = oldObj->next->next;
+    if (delObj->type == 0) {
+        freeString(delObj);
+    }
+    else if (delObj->type == 1) {
+        freeList(delObj);
+    }
+    return;
+}

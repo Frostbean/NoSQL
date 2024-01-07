@@ -34,7 +34,9 @@ dbObj *createString();
 dbObj *createList();
 void pushObj(dbObj **oldObj, const int type);
 void popObj(dbObj **const oldObj);
+void delAfterObj(dbObj *const oldObj);
 void freeString(dbObj *const delObj);
+void freeList(dbObj *const delObj);
 void lpush(node **const leftMost, const char *buffer);
 void rpush(node **rightMost, const char *buffer);
 void lpop(node **leftMost, char **rValue);
@@ -43,7 +45,6 @@ int llen(const dbObj *const aObj);
 
 // TODO
 // void freeObj
-// void delAfterObj
 
 // node *createNode();
 // void pushNode(node **oldNode);
