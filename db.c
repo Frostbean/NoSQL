@@ -29,6 +29,10 @@ void DBset(dbObj **const db, const char *const key, const char *value) {
         aObj = *db;
         setKey(aObj,key);       
     }
+    if (aObj->type != 0) {
+        printf("Invalid type\n");
+        return;
+    }
     setValueString(aObj,value);
     printf("OK\n");
 }
@@ -84,6 +88,10 @@ void DBllen(dbObj **const db, const char *const key) {
         printf("(nil)\n");
         return;
     }
+    if (aObj->type != 1) {
+        printf("Invalid type\n");
+        return;
+    }
     printf("Length: %d\n", llen(aObj));
 }
 
@@ -95,6 +103,10 @@ void DBlrange(dbObj **const db, const char *const key, int lowBound, int highBou
     aObj = DBfind(db , key);
     if (aObj == NULL) {
         printf("(nil)\n");
+        return;
+    }
+    if (aObj->type != 1) {
+        printf("Invalid type\n");
         return;
     }
     const node *cur = aObj->list.leftMost;
@@ -136,6 +148,10 @@ void DBlpush(dbObj **db, const char *key, const char *value) {
         printf("OK\n");
         return;
     }
+    if (aObj->type != 1) {
+        printf("Invalid type\n");
+        return;
+    }
     lpush(aObj, value);
     printf("OK\n");
 }
@@ -154,6 +170,10 @@ void DBrpush(dbObj **db, const char *key, const char *value) {
         printf("OK\n");
         return;
     }
+    if (aObj->type != 1) {
+        printf("Invalid type\n");
+        return;
+    }
     rpush(aObj, value);
 }
 
@@ -166,6 +186,10 @@ void DBlpop(dbObj **db, const char *key, char **returnValue) {
     aObj = DBfind(db , key);
     if (aObj == NULL) {
         printf("(nil)\n");
+        return;
+    }
+    if (aObj->type != 1) {
+        printf("Invalid type\n");
         return;
     }
     lpop(aObj, returnValue);
@@ -181,6 +205,10 @@ void DBrpop(dbObj **db, const char *key, char **returnValue) {
     aObj = DBfind(db , key);
     if (aObj == NULL) {
         printf("(nil)\n");
+        return;
+    }
+    if (aObj->type != 1) {
+        printf("Invalid type\n");
         return;
     }
     rpop(aObj, returnValue);

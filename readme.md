@@ -35,5 +35,4 @@ gcc dev.c -L. -linput -lcommand -ldb -llink && ./a.out
 Note: link between libraries can be better organized
 Bug: strcmp has different result on ubuntu and windows
 Bug: Values sometimes mess up. However, same operations not always lead to same result
-Bug: Some bugs may happen about list operations
 Hint: link from the current library to later library
