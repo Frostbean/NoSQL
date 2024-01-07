@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include "input.h"
@@ -5,9 +6,8 @@
 
 int main() {
     // initial
-    node *db;
-    char *value = (char *)malloc(0);
-    db = NULL;
+    char *returnBuffer = (char *)malloc(0);
+    dbObj *db = NULL;
     char input_buffer[100];
     const char *input_splited[INPUT_MAX_WORDS] = {NULL};
 
@@ -19,8 +19,7 @@ int main() {
     while (strcmp(input_buffer, "quit")) {
         // dumpInput(input_splited);
 
-        // db = commandExecution(db, input_splited, value);
-        commandExecution(&db, input_splited, &value);
+        commandExecution(&db, input_splited, &returnBuffer);
 
         readInput(input_buffer);
         removeEOL(input_buffer, strlen(input_buffer));
@@ -29,9 +28,9 @@ int main() {
 
     // clear database
     while (db != NULL) {
-        popNode(&db);
+        popObj(&db);
     }
-    free(value);
+    free(returnBuffer);
 
     return 0;
 }
