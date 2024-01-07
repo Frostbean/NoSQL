@@ -4,8 +4,14 @@ String Type Processing
 * GET
 * DEL
 
-Bug: strcmp has different result on ubuntu and windows
-Leak: lost 0 bytes in blocks
+# HW3
+List Type Processing
+* LPUSH
+* RPUSH
+* LPOP
+* RPOP
+* LLEN
+* LRANGE
 
 # How to use
 gcc -c link.c
@@ -27,6 +33,7 @@ gcc main.c -L. -llink -lalloc -ldb -linput -lcommand [-o a.out]
 gcc dev.c -L. -linput -lcommand -ldb -llink && ./a.out
 
 Note: link between libraries can be better organized
+Bug: strcmp has different result on ubuntu and windows
 Bug: Values sometimes mess up. However, same operations not always lead to same result
 Bug: Some bugs may happen about list operations
 Hint: link from the current library to later library
