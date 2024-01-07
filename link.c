@@ -37,6 +37,7 @@ dbObj *createObj() {
     aObj->value = NULL;
     aObj->next = NULL;
     aObj->type = -1;
+    return aObj;
 }
 
 node *createNode() {
@@ -50,6 +51,7 @@ node *createNode() {
 dbObj *createString() {
     dbObj *aObj = createObj();
     aObj->type = 0;
+    return aObj;
 }
 
 dbObj *createList() {
@@ -58,6 +60,7 @@ dbObj *createList() {
     aObj->list.leftMost = aNode;
     aObj->list.rightMost = aNode;
     aObj->type = 1;
+    return aObj;
 }
 
 void lpush(dbObj *const aObj, const char *buffer) {

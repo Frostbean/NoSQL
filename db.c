@@ -81,6 +81,7 @@ void DBdelete(dbObj **const db, const char *const key) {
 void DBllen(dbObj **const db, const char *const key) {
     dbObj *aObj;
     if (*db == NULL) {
+        printf("(nil)\n");
         return;
     }
     aObj = DBfind(db, key);
@@ -135,11 +136,7 @@ void DBlrange(dbObj **const db, const char *const key, int lowBound, int highBou
 }
 
 void DBlpush(dbObj **db, const char *key, const char *value) {
-    dbObj *aObj;
-    if (*db == NULL) {
-        return;
-    }
-    aObj = DBfind(db , key);
+    dbObj *aObj = DBfind(db , key);
     // if no corresponding key found
     if (aObj == NULL) {
         pushObj(db, 1);
