@@ -60,39 +60,49 @@ dbObj *createList() {
     aObj->type = 1;
 }
 
-void lpush(node **const leftMost, const char *buffer) {
+void lpush(dbObj *const aObj, const char *buffer) {
     node *newNode = createNode();
-    if (*leftMost == NULL) {
-        *leftMost = createNode();
+    if (aObj->list.leftMost == NULL) {
+        aObj->list.leftMost = createNode();
     }
-    newNode->right = *leftMost;
-    (*leftMost)->left = newNode;
-    *leftMost = newNode;
-    setValueList(*leftMost, buffer);
+    newNode->right = aObj->list.leftMost;
+    aObj->list.leftMost->left = newNode;
+    aObj->list.leftMost = newNode;
+    setValueList(aObj->list.leftMost, buffer);
 }
 
-void rpush(node **rightMost, const char *buffer) {
+void rpush(dbObj *const aObj, const char *buffer) {
     node *newNode = createNode();
-    newNode->left = *rightMost;
-    (*rightMost)->right = newNode;
-    *rightMost = newNode;
-    setValueList(*rightMost, buffer);
+    newNode->left = aObj->list.rightMost;
+    aObj->list.rightMost->right = newNode;
+    aObj->list.rightMost = newNode;
+    setValueList(aObj->list.rightMost, buffer);
 }
 
-void lpop(node **leftMost, char **rValue) {
-    node *delNode = *leftMost;
-    *leftMost = (*leftMost)->right;
-    (*leftMost)->left = NULL;
+void lpop(dbObj *const aObj, char **rValue) {
+    node *delNode = aObj->list.leftMost;
+    aObj->list.leftMost = aObj->list.leftMost->right;
+    if ((aObj->list.leftMost != NULL)) {
+        aObj->list.leftMost->left = NULL;
+    }
+    else {
+        aObj->list.rightMost = NULL;
+    }
     size_t len = strlen(delNode->value);
     *rValue = (char *)realloc(*rValue, sizeof(len + 1));
     strncpy(*rValue,delNode->value,len);
     free(delNode);
 }
 
-void rpop(node **rightMost, char **rValue) {
-    node *delNode = *rightMost;
-    *rightMost = (*rightMost)->left;
-    (*rightMost)->right = NULL;
+void rpop(dbObj *const aObj, char **rValue) {
+    node *delNode = aObj->list.rightMost;
+    aObj->list.rightMost = aObj->list.rightMost->left;
+    if ((aObj->list.rightMost != NULL)) {
+        aObj->list.rightMost->right = NULL;
+    }
+    else {
+        aObj->list.leftMost = NULL;
+    }
     size_t len = strlen(delNode->value);
     *rValue = (char *)realloc(*rValue, sizeof(len + 1));
     strncpy(*rValue,delNode->value,len);
@@ -144,7 +154,7 @@ void freeList(dbObj *const delObj) {
     char *returnBuffer = (char *)malloc(0);
     free(delObj->key);
     while (delObj->list.leftMost != NULL) {
-        lpop(&(delObj->list.leftMost), &returnBuffer);
+        lpop(delObj, &returnBuffer);
     }
     free(delObj);
 }

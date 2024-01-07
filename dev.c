@@ -48,7 +48,7 @@ void DBlrange(dbObj **const db, const char *const key, int lowBound, int highBou
     int pos = 0;       // current position
     int len = llen(aObj);
     if (len == 0) {
-        printf("(empty array)");
+        printf("(empty array)\n");
     }
     if (lowBound < 0) {
         lowBound = len + lowBound;
@@ -74,11 +74,16 @@ void DBlpush(dbObj **db, const char *key, const char *value) {
         return;
     }
     aObj = DBfind(db , key);
+    // if no corresponding key found
     if (aObj == NULL) {
-        printf("(nil)\n");
+        pushObj(db, 1);
+        setKey(*db, key);
+        setValueList((*db)->list.leftMost, value);
+        printf("OK\n");
         return;
     }
-    lpush(&(aObj->list.leftMost), value);
+    lpush(aObj, value);
+    printf("OK\n");
 }
 
 void DBrpush(dbObj **db, const char *key, const char *value) {
@@ -87,11 +92,15 @@ void DBrpush(dbObj **db, const char *key, const char *value) {
         return;
     }
     aObj = DBfind(db , key);
+    // if no corresponding key found
     if (aObj == NULL) {
-        printf("(nil)\n");
+        pushObj(db, 1);
+        setKey(*db, key);
+        setValueList((*db)->list.leftMost, value);
+        printf("OK\n");
         return;
     }
-    rpush(&(aObj->list.rightMost), value);
+    rpush(aObj, value);
 }
 
 void DBlpop(dbObj **db, const char *key, char **returnValue) {
@@ -105,7 +114,7 @@ void DBlpop(dbObj **db, const char *key, char **returnValue) {
         printf("(nil)\n");
         return;
     }
-    lpop(&(aObj->list.leftMost), returnValue);
+    lpop(aObj, returnValue);
     printf("Pop done\n");
 }
 
@@ -120,7 +129,7 @@ void DBrpop(dbObj **db, const char *key, char **returnValue) {
         printf("(nil)\n");
         return;
     }
-    rpop(&(aObj->list.rightMost), returnValue);
+    rpop(aObj, returnValue);
     printf("Pop done\n");
 }
 
@@ -195,33 +204,14 @@ void commandExecution(dbObj **db, const char **input_splited, char **returnValue
 int main() {
     char *returnBuffer = (char *)malloc(0);
     dbObj *db = NULL;
-
-    // node *nodeA = createNode();
-    // setValue(nodeA, "hello");
-    // lpush(&nodeA, "12345");
-    // lpop(&nodeA, &returnBuffer);
-    // printf("%s \n", returnBuffer);
-    // printf("%s \n", nodeA->value);
+    char input_buffer[100];
+    const char *input_splited[INPUT_MAX_WORDS] = {NULL};
 
     dbObj *aObj = createList();
     db = aObj;
     setKey(aObj, "111");
     printf("dbkey: %s\n", db->key);
     setValueList(aObj->list.leftMost, "1");
-    // DBlpush(aObj, "2");
-    // DBlpush(aObj, "3");
-    // DBlpush(aObj, "4");
-    // DBlpush(aObj, "5");
-    // DBrpush(aObj, "6");
-    // DBlpop(aObj, &returnBuffer);
-    // DBrpop(aObj, &returnBuffer);
-    // lpop(&(aObj->list.leftMost), &returnBuffer);
-
-    // DBllen(aObj);
-    // DBlrange(aObj, 0, 100);
-
-    char input_buffer[100];
-    const char *input_splited[INPUT_MAX_WORDS] = {NULL};
 
     // first input
     readInput(input_buffer);

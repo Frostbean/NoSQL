@@ -37,10 +37,10 @@ void popObj(dbObj **const oldObj);
 void delAfterObj(dbObj *const oldObj);
 void freeString(dbObj *const delObj);
 void freeList(dbObj *const delObj);
-void lpush(node **const leftMost, const char *buffer);
-void rpush(node **rightMost, const char *buffer);
-void lpop(node **leftMost, char **rValue);
-void rpop(node **rightMost, char **rValue);
+void lpush(dbObj *const aObj, const char *buffer);
+void rpush(dbObj *const aObj, const char *buffer);
+void lpop(dbObj *const aObj, char **rValue);
+void rpop(dbObj *const aObj, char **rValue);
 int llen(const dbObj *const aObj);
 
 #endif
