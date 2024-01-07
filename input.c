@@ -1,8 +1,6 @@
 #include <stdio.h>
 #include <string.h>
-
-#define FGETS_MAX_LENGTH 100
-#define INPUT_MAX_WORDS 5
+#include "input.h"
 
 void removeEOL(char *str, size_t len) {
     if (len > 0 && str[len - 1] == '\n') {
@@ -37,4 +35,23 @@ void readInput(char *input_buffer) {
     printf("> ");
     fgets(input_buffer, FGETS_MAX_LENGTH, stdin);
     // printf("The string is: %s", input_buffer);
+}
+
+int isNumber(const char *str) {
+    if (*str == '\0') {
+        return 0;
+    }
+    if (*str == '-') {
+        str++;
+    }
+    if (*str == '\0') {
+        return 0;
+    }
+    while (*str) {
+        if (!isdigit((unsigned char)*str)) {
+            return 0;
+        }
+        str++;
+    }
+    return 1;
 }

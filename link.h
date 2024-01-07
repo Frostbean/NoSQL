@@ -43,13 +43,4 @@ void lpop(node **leftMost, char **rValue);
 void rpop(node **rightMost, char **rValue);
 int llen(const dbObj *const aObj);
 
-// TODO
-// void freeObj
-
-// node *createNode();
-// void pushNode(node **oldNode);
-// void freeNode(node *const delNode);
-// void popNode(node **const oldNode);
-// void delAfterNode(node *const oldNode);
-
 #endif

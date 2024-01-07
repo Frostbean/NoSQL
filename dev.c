@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "input.h"
-#include "alloc.h"
+#include "link.h"
 
 // return address of a single obj
 dbObj *DBfind(dbObj **const db, const char *const key) {
@@ -33,7 +33,16 @@ void DBllen(dbObj **const db, const char *const key) {
     printf("Length: %d\n", llen(aObj));
 }
 
-void DBlrange(const dbObj *const aObj , int lowBound, int highBound) {
+void DBlrange(dbObj **const db, const char *const key, int lowBound, int highBound) {
+    dbObj *aObj;
+    if (*db == NULL) {
+        return;
+    }
+    aObj = DBfind(db , key);
+    if (aObj == NULL) {
+        printf("(nil)\n");
+        return;
+    }
     const node *cur = aObj->list.leftMost;
     int count = 0;     // number of found node
     int pos = 0;       // current position
@@ -104,7 +113,6 @@ void commandExecution(dbObj **db, const char **input_splited, char **value) {
         printf("rpop\n");
     }
     else if (!strcmp(*(input_splited), "llen")) {
-        printf("llen\n");
         if (*(input_splited+1) != NULL) {
             DBllen(db, *(input_splited+1));
         }
@@ -113,7 +121,17 @@ void commandExecution(dbObj **db, const char **input_splited, char **value) {
         }
     }
     else if (!strcmp(*(input_splited), "lrange")) {
-        printf("lrange\n");
+        if (*(input_splited+1) != NULL && *(input_splited+2) != NULL && *(input_splited+3) != NULL) {
+            if (isNumber(*(input_splited+2)) && isNumber(*(input_splited+3))) {
+                DBlrange(db, *(input_splited+1), atoi(*(input_splited+2)), atoi(*(input_splited+3)));
+            }
+            else {
+                printf("Invalid number.\n");
+            }
+        }
+        else {
+            printf("Missing operand.\n");
+        }
     }
     else {
         printf("Unknown Instruction\n");
@@ -146,7 +164,7 @@ int main() {
     // lpop(&(aObj->list.leftMost), &returnBuffer);
 
     // DBllen(aObj);
-    DBlrange(aObj, 0, 100);
+    // DBlrange(aObj, 0, 100);
 
     char input_buffer[100];
     const char *input_splited[INPUT_MAX_WORDS] = {NULL};

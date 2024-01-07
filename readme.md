@@ -11,9 +11,6 @@ Leak: lost 0 bytes in blocks
 gcc -c link.c
 ar rcs liblink.a link.o
 AND
-gcc -c alloc.c
-ar rcs liballoc.a alloc.o
-AND
 gcc -c input.c
 ar rcs libinput.a input.o
 AND

@@ -56,7 +56,7 @@ void DBdelete(dbObj **const db, const char *const key) {
     }
     if (!strcmp((*db)->key,key)) {
         if ((*db)->type == 0) {
-            popNode(db);
+            popObj(db);
         }
         else if ((*db)->type == 1) {
             // TODO
@@ -73,7 +73,7 @@ void DBdelete(dbObj **const db, const char *const key) {
         return;
     }
     if (cur->type == 0) {
-        delAfterNode(prev);
+        delAfterObj(prev);
     }
     else if (cur->type == 1) {
         // TODO
