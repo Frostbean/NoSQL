@@ -68,23 +68,63 @@ void DBlrange(dbObj **const db, const char *const key, int lowBound, int highBou
     }
 }
 
-void DBlpush(dbObj *aObj ,const char *buffer) {
-    lpush(&(aObj->list.leftMost), buffer);
+void DBlpush(dbObj **db, const char *key, const char *value) {
+    dbObj *aObj;
+    if (*db == NULL) {
+        return;
+    }
+    aObj = DBfind(db , key);
+    if (aObj == NULL) {
+        printf("(nil)\n");
+        return;
+    }
+    lpush(&(aObj->list.leftMost), value);
 }
 
-void DBrpush(dbObj *aObj ,const char *buffer) {
-    rpush(&(aObj->list.rightMost), buffer);
+void DBrpush(dbObj **db, const char *key, const char *value) {
+    dbObj *aObj;
+    if (*db == NULL) {
+        return;
+    }
+    aObj = DBfind(db , key);
+    if (aObj == NULL) {
+        printf("(nil)\n");
+        return;
+    }
+    rpush(&(aObj->list.rightMost), value);
 }
 
-void DBlpop(dbObj *aObj ,char **rValue) {
-    lpop(&(aObj->list.leftMost), rValue);
+void DBlpop(dbObj **db, const char *key, char **returnValue) {
+    dbObj *aObj;
+    if (*db == NULL) {
+        printf("(nil)\n");
+        return;
+    }
+    aObj = DBfind(db , key);
+    if (aObj == NULL) {
+        printf("(nil)\n");
+        return;
+    }
+    lpop(&(aObj->list.leftMost), returnValue);
+    printf("Pop done\n");
 }
 
-void DBrpop(dbObj *aObj ,char **rValue) {
-    rpop(&(aObj->list.rightMost), rValue);
+void DBrpop(dbObj **db, const char *key, char **returnValue) {
+    dbObj *aObj;
+    if (*db == NULL) {
+        printf("(nil)\n");
+        return;
+    }
+    aObj = DBfind(db , key);
+    if (aObj == NULL) {
+        printf("(nil)\n");
+        return;
+    }
+    rpop(&(aObj->list.rightMost), returnValue);
+    printf("Pop done\n");
 }
 
-void commandExecution(dbObj **db, const char **input_splited, char **value) {
+void commandExecution(dbObj **db, const char **input_splited, char **returnValue) {
     if (!strcmp(*(input_splited), "set")) {
         printf("set\n");
     }
@@ -95,22 +135,36 @@ void commandExecution(dbObj **db, const char **input_splited, char **value) {
         printf("del\n");
     }
     else if (!strcmp(*(input_splited), "lpush")) {
-        printf("lpush\n");
         if (*(input_splited+1) != NULL && *(input_splited+2) != NULL) {
-            // DBset(db, *(input_splited+1), *(input_splited+2));
+            DBlpush(db, *(input_splited+1), *(input_splited+2));
         }
         else {
             printf("Missing operand.\n");
         }
     }
     else if (!strcmp(*(input_splited), "rpush")) {
-        printf("rpush\n");
+        if (*(input_splited+1) != NULL && *(input_splited+2) != NULL) {
+            DBrpush(db, *(input_splited+1), *(input_splited+2));
+        }
+        else {
+            printf("Missing operand.\n");
+        }
     }
     else if (!strcmp(*(input_splited), "lpop")) {
-        printf("lpop\n");
+        if (*(input_splited+1) != NULL) {
+            DBlpop(db, *(input_splited+1), returnValue);
+        }
+        else {
+            printf("Missing operand.\n");
+        }
     }
     else if (!strcmp(*(input_splited), "rpop")) {
-        printf("rpop\n");
+        if (*(input_splited+1) != NULL) {
+            DBrpop(db, *(input_splited+1), returnValue);
+        }
+        else {
+            printf("Missing operand.\n");
+        }
     }
     else if (!strcmp(*(input_splited), "llen")) {
         if (*(input_splited+1) != NULL) {
@@ -154,13 +208,13 @@ int main() {
     setKey(aObj, "111");
     printf("dbkey: %s\n", db->key);
     setValueList(aObj->list.leftMost, "1");
-    DBlpush(aObj, "2");
-    DBlpush(aObj, "3");
-    DBlpush(aObj, "4");
-    DBlpush(aObj, "5");
-    DBrpush(aObj, "6");
-    DBlpop(aObj, &returnBuffer);
-    DBrpop(aObj, &returnBuffer);
+    // DBlpush(aObj, "2");
+    // DBlpush(aObj, "3");
+    // DBlpush(aObj, "4");
+    // DBlpush(aObj, "5");
+    // DBrpush(aObj, "6");
+    // DBlpop(aObj, &returnBuffer);
+    // DBrpop(aObj, &returnBuffer);
     // lpop(&(aObj->list.leftMost), &returnBuffer);
 
     // DBllen(aObj);
