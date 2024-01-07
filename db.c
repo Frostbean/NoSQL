@@ -58,12 +58,7 @@ void DBdelete(dbObj **const db, const char *const key) {
         return;
     }
     if (!strcmp((*db)->key,key)) {
-        if ((*db)->type == 0) {
-            popObj(db);
-        }
-        else if ((*db)->type == 1) {
-            // TODO
-        }
+        popObj(db);
         return;
     }
     dbObj *prev = NULL;
@@ -75,11 +70,119 @@ void DBdelete(dbObj **const db, const char *const key) {
     if (cur == NULL) {
         return;
     }
-    if (cur->type == 0) {
-        delAfterObj(prev);
-    }
-    else if (cur->type == 1) {
-        // TODO
-    }
+    delAfterObj(prev);
     return;
+}
+
+void DBllen(dbObj **const db, const char *const key) {
+    dbObj *aObj;
+    if (*db == NULL) {
+        return;
+    }
+    aObj = DBfind(db, key);
+    if (aObj == NULL) {
+        printf("(nil)\n");
+        return;
+    }
+    printf("Length: %d\n", llen(aObj));
+}
+
+void DBlrange(dbObj **const db, const char *const key, int lowBound, int highBound) {
+    dbObj *aObj;
+    if (*db == NULL) {
+        return;
+    }
+    aObj = DBfind(db , key);
+    if (aObj == NULL) {
+        printf("(nil)\n");
+        return;
+    }
+    const node *cur = aObj->list.leftMost;
+    int count = 0;     // number of found node
+    int pos = 0;       // current position
+    int len = llen(aObj);
+    if (len == 0) {
+        printf("(empty array)\n");
+    }
+    if (lowBound < 0) {
+        lowBound = len + lowBound;
+    }
+    if (highBound < 0) {
+        highBound = len + highBound;
+    }
+    while (cur != NULL && pos < lowBound) {
+        pos++;
+        cur = cur->right;
+    }
+    while (cur != NULL && pos <= highBound) {
+        count++;
+        pos++;
+        printf("%d) %s\n", count, cur->value);
+        cur = cur->right;
+    }
+}
+
+void DBlpush(dbObj **db, const char *key, const char *value) {
+    dbObj *aObj;
+    if (*db == NULL) {
+        return;
+    }
+    aObj = DBfind(db , key);
+    // if no corresponding key found
+    if (aObj == NULL) {
+        pushObj(db, 1);
+        setKey(*db, key);
+        setValueList((*db)->list.leftMost, value);
+        printf("OK\n");
+        return;
+    }
+    lpush(aObj, value);
+    printf("OK\n");
+}
+
+void DBrpush(dbObj **db, const char *key, const char *value) {
+    dbObj *aObj;
+    if (*db == NULL) {
+        return;
+    }
+    aObj = DBfind(db , key);
+    // if no corresponding key found
+    if (aObj == NULL) {
+        pushObj(db, 1);
+        setKey(*db, key);
+        setValueList((*db)->list.leftMost, value);
+        printf("OK\n");
+        return;
+    }
+    rpush(aObj, value);
+}
+
+void DBlpop(dbObj **db, const char *key, char **returnValue) {
+    dbObj *aObj;
+    if (*db == NULL) {
+        printf("(nil)\n");
+        return;
+    }
+    aObj = DBfind(db , key);
+    if (aObj == NULL) {
+        printf("(nil)\n");
+        return;
+    }
+    lpop(aObj, returnValue);
+    printf("Pop done\n");
+}
+
+void DBrpop(dbObj **db, const char *key, char **returnValue) {
+    dbObj *aObj;
+    if (*db == NULL) {
+        printf("(nil)\n");
+        return;
+    }
+    aObj = DBfind(db , key);
+    if (aObj == NULL) {
+        printf("(nil)\n");
+        return;
+    }
+    rpop(aObj, returnValue);
+    printf("Pop done\n");
 }
