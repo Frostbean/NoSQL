@@ -2,23 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "input.h"
-#include "link.h"
-
-// return address of a single obj
-dbObj *DBfind(dbObj **const db, const char *const key) {
-    dbObj *aObj;
-    if (*db == NULL) {
-        return NULL;
-    }
-    aObj = *db;
-    do {
-        if (!strcmp(aObj->key,key)) {
-            return aObj;
-        }
-        aObj = aObj->next;
-    } while (aObj);
-    return NULL;
-}
+#include "db.h"
 
 void DBllen(dbObj **const db, const char *const key) {
     dbObj *aObj;
@@ -134,14 +118,32 @@ void DBrpop(dbObj **db, const char *key, char **returnValue) {
 }
 
 void commandExecution(dbObj **db, const char **input_splited, char **returnValue) {
-    if (!strcmp(*(input_splited), "set")) {
-        printf("set\n");
+    if (streql(*(input_splited), "set")) {
+        if (*(input_splited+1) != NULL && *(input_splited+2) != NULL) {
+            DBset(db, *(input_splited+1), *(input_splited+2));
+        }
+        else {
+            printf("Missing operand.\n");
+        }
     }
-    else if (!strcmp(*(input_splited), "get")) {
-        printf("get\n");
+    else if (streql(*(input_splited), "get")) {
+        if (*(input_splited+1) != NULL) {
+            DBget(db, *(input_splited+1), returnValue);
+            if (*returnValue != NULL) {
+                printf("\"%s\"\n", *returnValue);
+            }
+        }
+        else {
+            printf("Missing operand.\n");
+        }
     }
-    else if (!strcmp(*(input_splited), "del")) {
-        printf("del\n");
+    else if (streql(*(input_splited), "del")) {
+        if (*(input_splited+1) != NULL) {
+            DBdelete(db, *(input_splited+1));
+        }
+        else {
+            printf("Missing operand.\n");
+        }
     }
     else if (!strcmp(*(input_splited), "lpush")) {
         if (*(input_splited+1) != NULL && *(input_splited+2) != NULL) {

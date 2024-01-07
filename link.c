@@ -64,6 +64,7 @@ void lpush(dbObj *const aObj, const char *buffer) {
     node *newNode = createNode();
     if (aObj->list.leftMost == NULL) {
         aObj->list.leftMost = createNode();
+        aObj->list.rightMost = aObj->list.leftMost;
     }
     newNode->right = aObj->list.leftMost;
     aObj->list.leftMost->left = newNode;
@@ -73,6 +74,10 @@ void lpush(dbObj *const aObj, const char *buffer) {
 
 void rpush(dbObj *const aObj, const char *buffer) {
     node *newNode = createNode();
+    if (aObj->list.rightMost == NULL) {
+        aObj->list.leftMost = createNode();
+        aObj->list.rightMost = aObj->list.leftMost;
+    }
     newNode->left = aObj->list.rightMost;
     aObj->list.rightMost->right = newNode;
     aObj->list.rightMost = newNode;

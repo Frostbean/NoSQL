@@ -19,23 +19,6 @@ dbObj *DBfind(dbObj **const db, const char *const key) {
     return NULL;
 }
 
-// double pointer of value to return the value was got
-void DBget(dbObj **db, const char *const key, char **value) {
-    const dbObj *aObj = DBfind(db,key);
-    if (aObj == NULL) {
-        *value = realloc(*value, 1);
-        *value = NULL;
-        return;
-    }
-    if (aObj->type != 0) {
-        printf("Invalid type");
-        return;
-    }
-    size_t len = strlen(aObj->value);
-    *value = (char *)realloc(*value, sizeof(len + 1));
-    strncpy(*value,aObj->value,len);
-}
-
 void DBset(dbObj **const db, const char *const key, const char *value) {
     dbObj *aObj;
     
@@ -47,7 +30,27 @@ void DBset(dbObj **const db, const char *const key, const char *value) {
         setKey(aObj,key);       
     }
     setValueString(aObj,value);
-    printf("OK");
+    printf("OK\n");
+}
+
+// double pointer of value to return the value was got
+void DBget(dbObj **db, const char *const key, char **value) {
+    const dbObj *aObj = DBfind(db,key);
+    if (aObj == NULL) {
+        *value = realloc(*value, 1);
+        *value = NULL;
+        printf("(nil)\n");
+        return;
+    }
+    if (aObj->type != 0) {
+        *value = realloc(*value, 1);
+        *value = NULL;
+        printf("Invalid type\n");
+        return;
+    }
+    size_t len = strlen(aObj->value);
+    *value = (char *)realloc(*value, sizeof(len + 1));
+    strncpy(*value,aObj->value,len);
 }
 
 void DBdelete(dbObj **const db, const char *const key) {

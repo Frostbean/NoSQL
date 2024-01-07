@@ -15,12 +15,7 @@ void commandExecution(node **db, const char **input_splited, char **value) {
     else if (streql(*(input_splited), "get")) {
         if (*(input_splited+1) != NULL) {
             DBget(db, *(input_splited+1), value);
-            if (*value == NULL) {
-                // printf("No corresponding key.\n");
-                printf("(nil)\n");
-            }
-            else {
-                // printf("Value is \"%s\".\n", *value);
+            if (*value != NULL) {
                 printf("\"%s\"\n", *value);
             }
         }
