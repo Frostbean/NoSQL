@@ -27,4 +27,6 @@ gcc main.c link.o alloc.o db.o input.o command.o
 OR
 gcc main.c -L. -llink -lalloc -ldb -linput -lcommand [-o a.out]
 
+gcc dev.c -L. -linput -llink  && ./a.out
+
 Note: link between libraries can be better organized

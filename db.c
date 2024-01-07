@@ -1,19 +1,70 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "alloc.h"
 #include "db.h"
 
-void DBdelete(node **const db, const char *const key) {
+// return address of a single obj
+dbObj *DBfind(dbObj **const db, const char *const key) {
+    dbObj *aObj;
+    if (*db == NULL) {
+        return NULL;
+    }
+    aObj = *db;
+    do {
+        if (!strcmp(aObj->key,key)) {
+            return aObj;
+        }
+        aObj = aObj->next;
+    } while (aObj);
+    return NULL;
+}
+
+// double pointer of value to return the value was got
+void DBget(dbObj **db, const char *const key, char **value) {
+    const dbObj *aObj = DBfind(db,key);
+    if (aObj == NULL) {
+        *value = realloc(*value, 1);
+        *value = NULL;
+        return;
+    }
+    if (aObj->type != 0) {
+        printf("Invalid type");
+        return;
+    }
+    size_t len = strlen(aObj->value);
+    *value = (char *)realloc(*value, sizeof(len + 1));
+    strncpy(*value,aObj->value,len);
+}
+
+void DBset(dbObj **const db, const char *const key, const char *value) {
+    dbObj *aObj;
+    
+    aObj = DBfind(db,key);
+    // if key doesn't exist, create and set newNode
+    if (!aObj) {
+        pushObj(db, 0);
+        aObj = *db;
+        setKey(aObj,key);       
+    }
+    setValueString(aObj,value);
+    printf("OK");
+}
+
+void DBdelete(dbObj **const db, const char *const key) {
     if (*db == NULL) {
         return;
     }
     if (!strcmp((*db)->key,key)) {
-        popNode(db);
+        if ((*db)->type == 0) {
+            popNode(db);
+        }
+        else if ((*db)->type == 1) {
+            // TODO
+        }
         return;
     }
-    node *prev = NULL;
-    node *cur = *db;
+    dbObj *prev = NULL;
+    dbObj *cur = *db;
     while (strcmp(cur->key, key) && cur != NULL) {
         prev = cur;
         cur = cur->next;
@@ -21,49 +72,11 @@ void DBdelete(node **const db, const char *const key) {
     if (cur == NULL) {
         return;
     }
-    delAfterNode(prev);
+    if (cur->type == 0) {
+        delAfterNode(prev);
+    }
+    else if (cur->type == 1) {
+        // TODO
+    }
     return;
-}
-
-// return a single node
-node *DBfind(node **const db, const char *const key) {
-    node *aNode;
-    if (*db == NULL) {
-        return NULL;
-    }
-    aNode = *db;
-    do {
-        if (streql(aNode->key,key)) {
-            return aNode;
-        }
-        aNode = aNode->next;
-    } while (aNode);
-    return NULL;
-}
-
-// double pointer of value to return the value was got
-void DBget(node **db, const char *const key, char **value) {
-    const node *aNode = DBfind(db,key);
-    if (aNode == NULL) {
-        *value = realloc(*value, 1);
-        *value = NULL;
-        return;
-    }
-    size_t len = strlen(aNode->value);
-    *value = (char *)realloc(*value, sizeof(len + 1));
-    strncpy(*value,aNode->value,len);
-}
-
-void DBset(node **const db, const char *const key, const char *value) {
-    node *aNode;
-    
-    aNode = DBfind(db,key);
-    // if key doesn't exist, create and set newNode
-    if (!aNode) {
-        pushNode(db);
-        aNode = *db;
-        setKey(aNode,key);       
-    }
-    setValue(aNode,value);
-    printf("OK");
 }

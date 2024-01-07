@@ -1,128 +1,35 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "input.h"
+#include "alloc.h"
 
-// doubly linked list
-typedef struct node {
-    char *value;
-    struct node *left;
-    struct node *right;
-} node;
-
-// typedef struct dList {
-//     node *leftMost;
-//     node *rightMost;
-// } dList;
-
-// type 0: string, type 1: list
-typedef struct dbObj {
-    char *key;
-    union {
-        char *value;    // type 0
-        struct {
-            node *leftMost;  // type 1, leftmost node of list
-            node *rightMost; // type 1, rightmost node of list
-        } list;
-    };
-    struct dbObj *next;
-    int type;
-} dbObj;
-
-void setKey(dbObj *aObj, const char *buffer) {
-    size_t len;
-    // what about sizeof
-    len = strlen(buffer);
-    aObj->key = (char *)malloc(len + 1);
-    strncpy(aObj->key,buffer+'\0',len);
-}
-
-void setValue(node *aNode, const char *buffer) {
-    size_t len;
-    // what about sizeof
-    len = strlen(buffer);
-    if (aNode->value) {
-        free(aNode->value);
+// return address of a single obj
+dbObj *DBfind(dbObj **const db, const char *const key) {
+    dbObj *aObj;
+    if (*db == NULL) {
+        return NULL;
     }
-    aNode->value = (char *)malloc(len + 1);
-    strncpy(aNode->value,buffer+'\0',len);
+    aObj = *db;
+    do {
+        if (!strcmp(aObj->key,key)) {
+            return aObj;
+        }
+        aObj = aObj->next;
+    } while (aObj);
+    return NULL;
 }
 
-node *createNode() {
-    node *aNode = malloc(sizeof(node));
-    aNode->value = NULL;
-    aNode->left = NULL;
-    aNode->right = NULL;
-    return aNode;
-}
-
-void lpush(node **const leftMost, const char *buffer) {
-    node *newNode = createNode();
-    if (*leftMost == NULL) {
-        *leftMost = createNode();
+void DBllen(dbObj **const db, const char *const key) {
+    dbObj *aObj;
+    if (*db == NULL) {
+        return;
     }
-    newNode->right = *leftMost;
-    (*leftMost)->left = newNode;
-    *leftMost = newNode;
-    setValue(*leftMost, buffer);
-}
-
-void rpush(node **rightMost, const char *buffer) {
-    node *newNode = createNode();
-    newNode->left = *rightMost;
-    (*rightMost)->right = newNode;
-    *rightMost = newNode;
-    setValue(*rightMost, buffer);
-}
-
-void lpop(node **leftMost, char **rValue) {
-    node *delNode = *leftMost;
-    *leftMost = (*leftMost)->right;
-    (*leftMost)->left = NULL;
-    size_t len = strlen(delNode->value);
-    *rValue = (char *)realloc(*rValue, sizeof(len + 1));
-    strncpy(*rValue,delNode->value,len);
-    printf("%s \n", *rValue);
-    free(delNode);
-}
-
-void rpop(node **rightMost, char **rValue) {
-    node *delNode = *rightMost;
-    *rightMost = (*rightMost)->left;
-    (*rightMost)->right = NULL;
-    size_t len = strlen(delNode->value);
-    *rValue = (char *)realloc(*rValue, sizeof(len + 1));
-    strncpy(*rValue,delNode->value,len);
-    printf("%s \n", *rValue);
-    free(delNode);
-}
-
-dbObj *createObj() {
-    dbObj *aObj = malloc(sizeof(dbObj));
-    aObj->key = NULL;
-    aObj->value = NULL;
-    aObj->next = NULL;
-    aObj->type = -1;
-}
-
-dbObj *createList() {
-    dbObj *aObj = createObj();
-    node *aNode = createNode();
-    aObj->list.leftMost = aNode;
-    aObj->list.rightMost = aNode;
-    aObj->type = 1;
-}
-
-int llen(const dbObj *const aObj) {
-    const node *cur = aObj->list.leftMost;
-    int count = 0;
-    while (cur != NULL) {
-        count++;
-        cur = cur->right;
+    aObj = DBfind(db, key);
+    if (aObj == NULL) {
+        printf("(nil)\n");
+        return;
     }
-    return count;
-}
-
-void DBllen(const dbObj *const aObj) {
     printf("Length: %d\n", llen(aObj));
 }
 
@@ -131,6 +38,9 @@ void DBlrange(const dbObj *const aObj , int lowBound, int highBound) {
     int count = 0;     // number of found node
     int pos = 0;       // current position
     int len = llen(aObj);
+    if (len == 0) {
+        printf("(empty array)");
+    }
     if (lowBound < 0) {
         lowBound = len + lowBound;
     }
@@ -165,8 +75,54 @@ void DBrpop(dbObj *aObj ,char **rValue) {
     rpop(&(aObj->list.rightMost), rValue);
 }
 
+void commandExecution(dbObj **db, const char **input_splited, char **value) {
+    if (!strcmp(*(input_splited), "set")) {
+        printf("set\n");
+    }
+    else if (!strcmp(*(input_splited), "get")) {
+        printf("get\n");
+    }
+    else if (!strcmp(*(input_splited), "del")) {
+        printf("del\n");
+    }
+    else if (!strcmp(*(input_splited), "lpush")) {
+        printf("lpush\n");
+        if (*(input_splited+1) != NULL && *(input_splited+2) != NULL) {
+            // DBset(db, *(input_splited+1), *(input_splited+2));
+        }
+        else {
+            printf("Missing operand.\n");
+        }
+    }
+    else if (!strcmp(*(input_splited), "rpush")) {
+        printf("rpush\n");
+    }
+    else if (!strcmp(*(input_splited), "lpop")) {
+        printf("lpop\n");
+    }
+    else if (!strcmp(*(input_splited), "rpop")) {
+        printf("rpop\n");
+    }
+    else if (!strcmp(*(input_splited), "llen")) {
+        printf("llen\n");
+        if (*(input_splited+1) != NULL) {
+            DBllen(db, *(input_splited+1));
+        }
+        else {
+            printf("Missing operand.\n");
+        }
+    }
+    else if (!strcmp(*(input_splited), "lrange")) {
+        printf("lrange\n");
+    }
+    else {
+        printf("Unknown Instruction\n");
+    }
+}
+
 int main() {
     char *returnBuffer = (char *)malloc(0);
+    dbObj *db = NULL;
 
     // node *nodeA = createNode();
     // setValue(nodeA, "hello");
@@ -176,8 +132,10 @@ int main() {
     // printf("%s \n", nodeA->value);
 
     dbObj *aObj = createList();
+    db = aObj;
     setKey(aObj, "111");
-    setValue(aObj->list.leftMost, "1");
+    printf("dbkey: %s\n", db->key);
+    setValueList(aObj->list.leftMost, "1");
     DBlpush(aObj, "2");
     DBlpush(aObj, "3");
     DBlpush(aObj, "4");
@@ -187,8 +145,26 @@ int main() {
     DBrpop(aObj, &returnBuffer);
     // lpop(&(aObj->list.leftMost), &returnBuffer);
 
-    DBllen(aObj);
+    // DBllen(aObj);
     DBlrange(aObj, 0, 100);
+
+    char input_buffer[100];
+    const char *input_splited[INPUT_MAX_WORDS] = {NULL};
+
+    // first input
+    readInput(input_buffer);
+    removeEOL(input_buffer, strlen(input_buffer));
+    splitInput(input_splited, input_buffer, " ", INPUT_MAX_WORDS);
+
+    while (strcmp(input_buffer, "quit")) {
+        // dumpInput(input_splited);
+
+        commandExecution(&db, input_splited, &returnBuffer);
+
+        readInput(input_buffer);
+        removeEOL(input_buffer, strlen(input_buffer));
+        splitInput(input_splited, input_buffer, " ", INPUT_MAX_WORDS);
+    }
 
     return 0;
 }

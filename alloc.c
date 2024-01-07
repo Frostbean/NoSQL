@@ -1,15 +1,26 @@
 #include <string.h>
 #include "link.h"
 
-void setKey(node *aNode, const char *buffer) {
+void setKey(dbObj *aObj, const char *buffer) {
     size_t len;
     // what about sizeof
     len = strlen(buffer);
-    aNode->key = (char *)malloc(len + 1);
-    strncpy(aNode->key,buffer+'\0',len);
+    aObj->key = (char *)malloc(len + 1);
+    strncpy(aObj->key,buffer+'\0',len);
 }
 
-void setValue(node *aNode, const char *buffer) {
+void setValueString(dbObj *aObj, const char *buffer) {
+    size_t len;
+    // what about sizeof
+    len = strlen(buffer);
+    if (aObj->value) {
+        free(aObj->value);
+    }
+    aObj->value = (char *)malloc(len + 1);
+    strncpy(aObj->value,buffer+'\0',len);
+}
+
+void setValueList(node *aNode, const char *buffer) {
     size_t len;
     // what about sizeof
     len = strlen(buffer);
