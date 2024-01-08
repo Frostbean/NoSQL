@@ -29,6 +29,12 @@ AND
 gcc -c command.c
 ar rcs libcommand.a command.o
 
+gcc -c -fPIC -o murmurhash.o murmurhash.c
+gcc -shared -Wl,-soname,libmurmurhash.so.1 -o murmurhash.so.1.0.0 murmurhash.o
+ln -s libmurmurhash.so.1.0.0 libmurmurhash.so
+ln -s libmurmurhash.so.1.0.0 libmurmurhash.so.1
+<!-- gcc main.c -L. -lmurmurhash -o main_dynamic -->
+
 gcc main.c -L. -linput -lcommand -ldb -llink -lalloc && ./a.out
 
 Note: link between libraries can be better organized
