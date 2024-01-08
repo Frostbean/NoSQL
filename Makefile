@@ -4,32 +4,19 @@ CC=gcc
 CFLAGS=-Wall -g
 LDFLAGS=-L.
 LIBS=-linput -lcommand -ldb -llink -lalloc
-TARGET=myprogram
+TARGET=libdatabase.so
 OBJECT = alloc.o link.o input.o db.o command.o
-LIBRARY = liballoc.a liblink.a libinput.a libdb.a libcommand.a
+LIBRARY = libdatabase.so
 
-all: liballoc.a liblink.a libinput.a libdb.a libcommand.a $(TARGET)
+.PHONY: all clean
 
-liballoc.a: alloc.o
-	ar rcs liballoc.a alloc.o
+all: $(OBJECT) $(TARGET)
 
-liblink.a: link.o
-	ar rcs liblink.a link.o
-
-libinput.a: input.o
-	ar rcs libinput.a input.o
-
-libdb.a: db.o
-	ar rcs libdb.a db.o
-
-libcommand.a: command.o
-	ar rcs libcommand.a command.o
-
-$(TARGET): liballoc.a liblink.a libinput.a libdb.a libcommand.a
-	$(CC) $(CFLAGS) -o $(TARGET) main.c $(LDFLAGS) $(LIBS)
+$(TARGET): $(OBJECT)
+	$(CC) -shared $(CFLAGS) -o $(TARGET) $(OBJECT)
 
 .c.o:
-	$(CC) $(CFLAGS) -c $<
+	$(CC) -fPIC $(CFLAGS) -c $< -o $@
 
 clean:
 	rm -f *.o $(TARGET) $(LIBRARY) $(OBJECT)
