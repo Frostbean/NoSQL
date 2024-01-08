@@ -29,10 +29,6 @@ AND
 gcc -c command.c
 ar rcs libcommand.a command.o
 
-gcc main.c link.o alloc.o db.o input.o command.o
-OR
-gcc main.c -L. -llink -lalloc -ldb -linput -lcommand [-o a.out]
-
 gcc main.c -L. -linput -lcommand -ldb -llink -lalloc && ./a.out
 
 Note: link between libraries can be better organized
