@@ -33,6 +33,33 @@ dbObj *createList() {
     return aObj;
 }
 
+dbObj *createTable() {
+    dbObj *aObj = createObj();
+    aObj->hashMap.size = INITIAL_TABLE_SIZE;
+    aObj->hashMap.nodes = (hashNode **)malloc(sizeof(hashNode *) * INITIAL_TABLE_SIZE);
+    for (int i = 0; i < INITIAL_TABLE_SIZE; i++) {
+        aObj->hashMap.nodes[i] = NULL;
+    }
+    aObj->type = 3;
+    return aObj;
+}
+
+hashNode *createHashNode() {
+    hashNode *aHash = (hashNode *)malloc(sizeof(hashNode));
+    aHash->field = NULL;
+    aHash->value = NULL;
+    aHash->next = NULL;
+    return aHash;
+}
+
+void extendTable() {
+
+}
+
+void shortenTable() {
+
+}
+
 void lpush(dbObj *const aObj, const char *buffer) {
     node *newNode = createNode();
     if (aObj->list.leftMost == NULL) {
@@ -105,6 +132,9 @@ void pushObj(dbObj **oldObj, const int type) {
     else if (type == 1) {
         newObj = createList();
     }
+    else if (type == 3) {
+        newObj = createTable();
+    }
     else {
         return;
     }
@@ -167,4 +197,13 @@ void delAfterObj(dbObj *const oldObj) {
         freeList(delObj);
     }
     return;
+}
+
+void hset(dbObj *aObj, const char *field, const char *value) {
+    int pos = getHash(field, aObj->hashMap.size);
+    if ((aObj->hashMap.nodes)[pos] == NULL) {
+        (aObj->hashMap.nodes)[pos] = createHashNode();
+        setHashNode((aObj->hashMap.nodes)[pos], field, value);
+    }
+    // setHashNode
 }

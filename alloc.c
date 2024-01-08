@@ -29,3 +29,13 @@ void setValueList(node *aNode, const char *buffer) {
     aNode->value = (char *)malloc(len + 1);
     strncpy(aNode->value,buffer+'\0',len);
 }
+
+void setHashNode(hashNode *aHash, const char *field, const char *value) {
+    size_t len;
+    len = strlen(field);
+    aHash->field = (char *)malloc(len + 1);
+    strncpy(aHash->field,field+'\0',len);
+    len = strlen(value);
+    aHash->value = (char *)malloc(len + 1);
+    strncpy(aHash->value,value+'\0',len);
+}

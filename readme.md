@@ -16,6 +16,7 @@ List Type Processing
 # How to use (new)
 make
 gcc main.c -L. -ldatabase -o main
+LD_LIBRARY_PATH=. ./main
 
 # How to use
 gcc -c alloc.c

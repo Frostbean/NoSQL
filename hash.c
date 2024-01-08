@@ -1,22 +1,8 @@
-typedef struct hashNode {
-    char *field;
-    char *value;
-    hashNode *next;
-} hashNode;
+#include "hash.h"
 
-typedef struct dbObj {
-    char *key;
-    union {
-        char *value;    // type 0
-        struct {
-            node *leftMost;  // type 1, leftmost node of list
-            node *rightMost; // type 1, rightmost node of list
-        } list;
-        struct {
-            int size;
-            hashNode **nodes;
-        } hashMap;
-    };
-    struct dbObj *next;
-    int type;
-} dbObj;
+uint32_t getHash(const char *const key, int size) {
+    uint32_t seed = 0;
+    uint32_t hash = murmurhash(key, (uint32_t)strlen(key), seed);
+    printf("murmurhash(%s) = 0d%u\n", key, hash % size);
+    return hash % size;
+}

@@ -211,3 +211,21 @@ void DBrpop(dbObj **db, const char *key, char **returnValue) {
     rpop(aObj, returnValue);
     printf("Pop done\n");
 }
+
+void DBhset(dbObj **db, const char *key, const char *field, const char *value) {
+    dbObj *aObj;
+    
+    aObj = DBfind(db,key);
+    // if key doesn't exist, create and set newNode
+    if (!aObj) {
+        pushObj(db, 3);
+        aObj = *db;
+        setKey(aObj,key);       
+    }
+    if (aObj->type != 3) {
+        printf("Invalid type\n");
+        return;
+    }
+    hset(aObj, field, value);
+    printf("OK\n");
+}

@@ -8,7 +8,13 @@ typedef struct node {
     struct node *right;
 } node;
 
-// type 0: string, type 1: list
+typedef struct hashNode {
+    char *field;
+    char *value;
+    struct hashNode *next;
+} hashNode;
+
+// type 0: string, type 1: list, type 3: hash
 typedef struct dbObj {
     char *key;
     union {
@@ -17,6 +23,10 @@ typedef struct dbObj {
             node *leftMost;  // type 1, leftmost node of list
             node *rightMost; // type 1, rightmost node of list
         } list;
+        struct {
+            int size;
+            hashNode **nodes;
+        } hashMap;
     };
     struct dbObj *next;
     int type;
