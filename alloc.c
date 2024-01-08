@@ -5,7 +5,7 @@ void setKey(dbObj *aObj, const char *buffer) {
     // what about sizeof
     len = strlen(buffer);
     aObj->key = (char *)malloc(len + 1);
-    strncpy(aObj->key,buffer+'\0',len);
+    strncpy(aObj->key,buffer+'\0',len+1);
 }
 
 void setValueString(dbObj *aObj, const char *buffer) {
@@ -16,7 +16,7 @@ void setValueString(dbObj *aObj, const char *buffer) {
         free(aObj->value);
     }
     aObj->value = (char *)malloc(len + 1);
-    strncpy(aObj->value,buffer+'\0',len);
+    strncpy(aObj->value,buffer+'\0',len+1);
 }
 
 void setValueList(node *aNode, const char *buffer) {

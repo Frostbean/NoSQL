@@ -170,6 +170,21 @@ void freeList(dbObj *const delObj) {
     while (delObj->list.leftMost != NULL) {
         lpop(delObj, &returnBuffer);
     }
+    free(returnBuffer);
+    free(delObj);
+}
+
+void freeTable(dbObj *const delObj) {
+    printf("freetable\n");
+    free(delObj->key);
+    for (int i = 0; i < delObj->hashMap.size; i++) {
+        if ((delObj->hashMap.nodes)[i] != NULL) {
+            while((delObj->hashMap.nodes)[i] != NULL) {
+                popHashNode(delObj, i);
+            }
+        }
+    }
+    free(delObj->hashMap.nodes);
     free(delObj);
 }
 
@@ -190,6 +205,9 @@ void popObj(dbObj **const oldObj) {
     else if (delObj->type == 1) {
         freeList(delObj);
     }
+    else if (delObj->type == 3) {
+        freeTable(delObj);
+    }
     return;
 }
 
@@ -201,6 +219,9 @@ void delAfterObj(dbObj *const oldObj) {
     }
     else if (delObj->type == 1) {
         freeList(delObj);
+    }
+    else if (delObj->type == 3) {
+        freeTable(delObj);
     }
     return;
 }
