@@ -158,6 +158,12 @@ void freeString(dbObj *const delObj) {
 
 // }
 
+void freeHashNode(hashNode *delNode) {
+    free(delNode->field);
+    free(delNode->value);
+    free(delNode);
+}
+
 void freeList(dbObj *const delObj) {
     char *returnBuffer = (char *)malloc(0);
     free(delObj->key);
@@ -210,5 +216,22 @@ void hset(dbObj *aObj, const char *field, const char *value) {
         // hash collision
         (aObj->hashMap.nodes)[pos]->next = aHash;
     }
+    return;
+}
+
+void popHashNode(const dbObj *aObj, const int pos) {
+    hashNode *delHash = (aObj->hashMap.nodes)[pos];
+    if (delHash == NULL) {
+        return;
+    }
+    (aObj->hashMap.nodes)[pos] = (aObj->hashMap.nodes)[pos]->next;
+    freeHashNode(delHash);
+    return;
+}
+
+void delAfterHashNode(hashNode *prevHash) {
+    hashNode *delHash = prevHash->next;
+    prevHash->next = prevHash->next->next;
+    freeHashNode(delHash);
     return;
 }

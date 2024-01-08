@@ -23,5 +23,7 @@ void lpop(dbObj *const aObj, char **rValue);
 void rpop(dbObj *const aObj, char **rValue);
 int llen(const dbObj *const aObj);
 void hset(dbObj *aObj, const char *field, const char *value);
+void popHashNode(const dbObj *aObj, const int pos);
+void delAfterHashNode(hashNode *prevHash);
 
 #endif

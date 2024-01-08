@@ -48,6 +48,9 @@ void commandExecution(dbObj **db, const char **input_splited, char **returnValue
     else if (!strcmp(*(input_splited), "lpop")) {
         if (*(input_splited+1) != NULL) {
             DBlpop(db, *(input_splited+1), returnValue);
+            if (*returnValue != NULL) {
+                printf("\"%s\"\n", *returnValue);
+            }
         }
         else {
             printf("Missing operand.\n");
@@ -56,6 +59,9 @@ void commandExecution(dbObj **db, const char **input_splited, char **returnValue
     else if (!strcmp(*(input_splited), "rpop")) {
         if (*(input_splited+1) != NULL) {
             DBrpop(db, *(input_splited+1), returnValue);
+            if (*returnValue != NULL) {
+                printf("\"%s\"\n", *returnValue);
+            }
         }
         else {
             printf("Missing operand.\n");
@@ -96,6 +102,14 @@ void commandExecution(dbObj **db, const char **input_splited, char **returnValue
             if (*returnValue != NULL) {
                 printf("\"%s\"\n", *returnValue);
             }
+        }
+        else {
+            printf("Missing operand.\n");
+        }
+    }
+    else if (!strcmp(*(input_splited), "hdel")) {
+        if (*(input_splited+1) != NULL && *(input_splited+2) != NULL) {
+            DBhdel(db, *(input_splited+1), *(input_splited+2));
         }
         else {
             printf("Missing operand.\n");

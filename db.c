@@ -190,7 +190,7 @@ void DBlpop(dbObj **db, const char *key, char **returnValue) {
         return;
     }
     lpop(aObj, returnValue);
-    printf("Pop done\n");
+    // printf("Pop done\n");
 }
 
 void DBrpop(dbObj **db, const char *key, char **returnValue) {
@@ -209,7 +209,7 @@ void DBrpop(dbObj **db, const char *key, char **returnValue) {
         return;
     }
     rpop(aObj, returnValue);
-    printf("Pop done\n");
+    // printf("Pop done\n");
 }
 
 void DBhset(dbObj **db, const char *key, const char *field, const char *value) {
@@ -269,4 +269,38 @@ void DBhget(dbObj **db, const char *key, const char *field, char **returnValue) 
         printf("(nil)\n");
         return;
     }
+}
+
+void DBhdel(dbObj **db, const char *key, const char *field) {
+    const dbObj *aObj = DBfind(db,key);
+    if (aObj == NULL) {
+        printf("(nil)\n");
+        return;
+    }
+    if (aObj->type != 3) {
+        printf("Invalid type\n");
+        return;
+    }
+
+    int pos = getHash(field, aObj->hashMap.size);
+    if ((aObj->hashMap.nodes)[pos] == NULL) {
+        printf("(nil)\n");
+        return;
+    }
+
+    hashNode *prev = NULL;
+    hashNode *cur = (aObj->hashMap.nodes)[pos];
+    if (!strcmp(cur->field,field)) {
+        popHashNode(aObj, pos);
+        return;
+    }
+    while (strcmp(cur->field,field) && cur != NULL) {
+        prev = cur;
+        cur = cur->next;
+    }
+    if (cur == NULL) {
+        return;
+    }
+    delAfterHashNode(prev);
+    return;
 }
