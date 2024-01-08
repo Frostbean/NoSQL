@@ -90,6 +90,17 @@ void commandExecution(dbObj **db, const char **input_splited, char **returnValue
             printf("Missing operand.\n");
         }
     }
+    else if (!strcmp(*(input_splited), "hget")) {
+        if (*(input_splited+1) != NULL && *(input_splited+2) != NULL) {
+            DBhget(db, *(input_splited+1), *(input_splited+2), returnValue);
+            if (*returnValue != NULL) {
+                printf("\"%s\"\n", *returnValue);
+            }
+        }
+        else {
+            printf("Missing operand.\n");
+        }
+    }
     else {
         printf("Unknown Instruction\n");
     }

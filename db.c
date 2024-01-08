@@ -229,3 +229,44 @@ void DBhset(dbObj **db, const char *key, const char *field, const char *value) {
     hset(aObj, field, value);
     printf("OK\n");
 }
+
+void DBhget(dbObj **db, const char *key, const char *field, char **returnValue) {
+    const dbObj *aObj = DBfind(db,key);
+    if (aObj == NULL) {
+        *returnValue = realloc(*returnValue, 1);
+        *returnValue = NULL;
+        printf("(nil)\n");
+        return;
+    }
+    if (aObj->type != 3) {
+        *returnValue = realloc(*returnValue, 1);
+        *returnValue = NULL;
+        printf("Invalid type\n");
+        return;
+    }
+
+    int pos = getHash(field, aObj->hashMap.size);
+    if ((aObj->hashMap.nodes)[pos] == NULL) {
+        *returnValue = realloc(*returnValue, 1);
+        *returnValue = NULL;
+        printf("(nil)\n");
+        return;
+    }
+
+    hashNode *cur = (aObj->hashMap.nodes)[pos];
+    while (cur != NULL) {
+        if (!strcmp(cur->field, field)) {
+            size_t len = strlen(cur->value);
+            *returnValue = (char *)realloc(*returnValue, sizeof(len + 1));
+            strncpy(*returnValue,cur->value,len);
+            return;
+        }
+        cur = cur->next;
+    }
+    if (cur == NULL) {
+        *returnValue = realloc(*returnValue, 1);
+        *returnValue = NULL;
+        printf("(nil)\n");
+        return;
+    }
+}
