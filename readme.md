@@ -13,6 +13,10 @@ List Type Processing
 * LLEN
 * LRANGE
 
+# How to use (new)
+make
+gcc main.c -L. -ldatabase -o main
+
 # How to use
 gcc -c alloc.c
 ar rcs liballoc.a alloc.o

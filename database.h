@@ -2,6 +2,7 @@
 #define DATABASE_H
 
 #include "data.h"
+#include "murmurhash.h"
 
 #define INPUT_MAX_WORDS 5
 

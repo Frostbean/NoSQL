@@ -10,6 +10,11 @@ int main() {
     char input_buffer[100];
     const char *input_splited[INPUT_MAX_WORDS] = {NULL};
 
+    uint32_t seed = 0;
+    const char *key = "kinkajou"; // 0xb6d99cf8
+    uint32_t hash = murmurhash(key, (uint32_t)strlen(key), seed);
+    printf("murmurhash(%s) = 0x%x\n", key, hash);
+
     // first input
     readInput(input_buffer);
     removeEOL(input_buffer, strlen(input_buffer));

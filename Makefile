@@ -3,9 +3,8 @@
 CC=gcc
 CFLAGS=-Wall -g
 LDFLAGS=-L.
-LIBS=-linput -lcommand -ldb -llink -lalloc
 TARGET=libdatabase.so
-OBJECT = alloc.o link.o input.o db.o command.o
+OBJECT = alloc.o link.o input.o db.o command.o murmurhash.o
 LIBRARY = libdatabase.so
 
 .PHONY: all clean
