@@ -82,6 +82,14 @@ void commandExecution(dbObj **db, const char **input_splited, char **returnValue
             printf("Missing operand.\n");
         }
     }
+    else if (!strcmp(*(input_splited), "hset")) {
+        if (*(input_splited+1) != NULL && *(input_splited+2) != NULL && *(input_splited+3) != NULL) {
+            DBhset(db, *(input_splited+1), *(input_splited+2), *(input_splited+3));
+        }
+        else {
+            printf("Missing operand.\n");
+        }
+    }
     else {
         printf("Unknown Instruction\n");
     }

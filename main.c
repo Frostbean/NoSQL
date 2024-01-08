@@ -10,11 +10,6 @@ int main() {
     char input_buffer[100];
     const char *input_splited[INPUT_MAX_WORDS] = {NULL};
 
-    getHash("hello", 100);
-    getHash("hi", 100);
-    getHash("1", 100);
-    getHash("2", 100);
-
     // first input
     readInput(input_buffer);
     removeEOL(input_buffer, strlen(input_buffer));

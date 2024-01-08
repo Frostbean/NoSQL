@@ -201,9 +201,14 @@ void delAfterObj(dbObj *const oldObj) {
 
 void hset(dbObj *aObj, const char *field, const char *value) {
     int pos = getHash(field, aObj->hashMap.size);
+    hashNode *aHash = createHashNode();
+    setHashNode(aHash, field, value);
     if ((aObj->hashMap.nodes)[pos] == NULL) {
-        (aObj->hashMap.nodes)[pos] = createHashNode();
-        setHashNode((aObj->hashMap.nodes)[pos], field, value);
+        (aObj->hashMap.nodes)[pos] = aHash;
     }
-    // setHashNode
+    else {
+        // hash collision
+        (aObj->hashMap.nodes)[pos]->next = aHash;
+    }
+    return;
 }

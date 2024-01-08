@@ -20,5 +20,6 @@ void DBlpush(dbObj **db, const char *key, const char *value);
 void DBrpush(dbObj **db, const char *key, const char *value);
 void DBlpop(dbObj **db, const char *key, char **returnValue);
 void DBrpop(dbObj **db, const char *key, char **returnValue);
+void DBhset(dbObj **db, const char *key, const char *field, const char *value);
 
 #endif
