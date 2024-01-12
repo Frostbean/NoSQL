@@ -56,6 +56,7 @@ void extendTable(dbObj *const aObj) {
     hashNode **oldMap = aObj->hashMap.nodes;
     int oldSize = aObj->hashMap.size;
     int newSize = 2 * oldSize;
+    hashNode *cur;
     hashNode **newMap = malloc (sizeof(hashNode *) * newSize);
     hashNode *tmpHash = NULL;
     aObj->hashMap.size = newSize;
@@ -64,8 +65,18 @@ void extendTable(dbObj *const aObj) {
         if (oldMap[i] != NULL) {
             tmpHash = createHashNode();
             setHashNode(tmpHash, oldMap[i]->field, oldMap[i]->value);
-            newMap[i] = tmpHash;
-            aObj->hashMap.load += 1;
+
+            cur = newMap[getHash(oldMap[i]->field, newSize)];
+            while (cur != NULL && cur->next != NULL) {
+
+            }
+            if (cur == NULL) {
+                newMap[getHash(oldMap[i]->field, newSize)] = tmpHash;
+                aObj->hashMap.load += 1;
+            }
+            else if (cur->next == NULL) {
+                cur->next = tmpHash;
+            }
             free(oldMap[i]);
         }
     }
@@ -192,7 +203,6 @@ void freeList(dbObj *const delObj) {
 }
 
 void freeTable(dbObj *const delObj) {
-    printf("freetable\n");
     free(delObj->key);
     for (int i = 0; i < delObj->hashMap.size; i++) {
         if ((delObj->hashMap.nodes)[i] != NULL) {
@@ -244,9 +254,8 @@ void delAfterObj(dbObj *const oldObj) {
 }
 
 void hset(dbObj *const aObj, const char *field, const char *value) {
-    printf("%d\n", aObj->hashMap.load);
     if (aObj->hashMap.load * 1.00 / aObj->hashMap.size > 0.70) {
-        printf("High Load Factor");
+        printf("High Load Factor\n");
         extendTable(aObj);
         return;
     }
