@@ -282,6 +282,12 @@ void DBhdel(dbObj **db, const char *key, const char *field) {
         return;
     }
 
+    if (aObj->hashMap.load * 1.00 / aObj->hashMap.size < 0.01) {
+        printf("Low Load Factor\n");
+        shortenTable(aObj);
+        return;
+    }
+
     int pos = getHash(field, aObj->hashMap.size);
     if ((aObj->hashMap.nodes)[pos] == NULL) {
         printf("(nil)\n");

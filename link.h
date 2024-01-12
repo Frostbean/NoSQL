@@ -23,5 +23,7 @@ int llen(const dbObj *const aObj);
 void hset(dbObj *const aObj, const char *field, const char *value);
 void popHashNode(const dbObj *aObj, const int pos);
 void delAfterHashNode(hashNode *prevHash);
+void extendTable(dbObj *const aObj);
+void shortenTable(dbObj *const aObj);
 
 #endif

@@ -84,9 +84,37 @@ void extendTable(dbObj *const aObj) {
     free(oldMap);
 }
 
-// void shortenTable(dbObj *aObj) {
+void shortenTable(dbObj *const aObj) {
+    hashNode **oldMap = aObj->hashMap.nodes;
+    int oldSize = aObj->hashMap.size;
+    int newSize = oldSize / 2;
+    hashNode *cur;
+    hashNode **newMap = malloc (sizeof(hashNode *) * newSize);
+    hashNode *tmpHash = NULL;
+    aObj->hashMap.size = newSize;
+    aObj->hashMap.load = 0;
+    for (int i = 0; i < oldSize; i++) {
+        if (oldMap[i] != NULL) {
+            tmpHash = createHashNode();
+            setHashNode(tmpHash, oldMap[i]->field, oldMap[i]->value);
 
-// }
+            cur = newMap[getHash(oldMap[i]->field, newSize)];
+            while (cur != NULL && cur->next != NULL) {
+
+            }
+            if (cur == NULL) {
+                newMap[getHash(oldMap[i]->field, newSize)] = tmpHash;
+                aObj->hashMap.load += 1;
+            }
+            else if (cur->next == NULL) {
+                cur->next = tmpHash;
+            }
+            free(oldMap[i]);
+        }
+    }
+    aObj->hashMap.nodes = newMap;
+    free(oldMap);
+}
 
 void lpush(dbObj *const aObj, const char *buffer) {
     node *newNode = createNode();
