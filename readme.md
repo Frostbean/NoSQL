@@ -13,6 +13,12 @@ List Type Processing
 * LLEN
 * LRANGE
 
+# HW6
+Hash Type Processing
+* HSET
+* HGET
+* HDEL
+
 # How to use (new)
 make
 gcc main.c -L. -ldatabase -o main

@@ -1,6 +1,8 @@
 #ifndef data_c
 #define data_h
 
+#define INITIAL_TABLE_SIZE 100
+
 // doubly linked list
 typedef struct node {
     char *value;
@@ -14,6 +16,12 @@ typedef struct hashNode {
     struct hashNode *next;
 } hashNode;
 
+// typedef struct hashMap {
+//     int size;
+//     int load;
+//     hashNode **nodes;
+// } hashMap;
+
 // type 0: string, type 1: list, type 3: hash
 typedef struct dbObj {
     char *key;
@@ -25,6 +33,7 @@ typedef struct dbObj {
         } list;
         struct {
             int size;
+            int load;
             hashNode **nodes;
         } hashMap;
     };

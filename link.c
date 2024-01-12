@@ -33,11 +33,11 @@ dbObj *createList() {
     return aObj;
 }
 
-dbObj *createTable() {
+dbObj *createTable(int size) {
     dbObj *aObj = createObj();
-    aObj->hashMap.size = INITIAL_TABLE_SIZE;
-    aObj->hashMap.nodes = (hashNode **)malloc(sizeof(hashNode *) * INITIAL_TABLE_SIZE);
-    for (int i = 0; i < INITIAL_TABLE_SIZE; i++) {
+    aObj->hashMap.size = size;
+    aObj->hashMap.nodes = (hashNode **)malloc(sizeof(hashNode *) * size);
+    for (int i = 0; i < size; i++) {
         aObj->hashMap.nodes[i] = NULL;
     }
     aObj->type = 3;
@@ -52,13 +52,29 @@ hashNode *createHashNode() {
     return aHash;
 }
 
-void extendTable() {
-
+void extendTable(dbObj *const aObj) {
+    hashNode **oldMap = aObj->hashMap.nodes;
+    int oldSize = aObj->hashMap.size;
+    int newSize = 2 * oldSize;
+    hashNode **newMap = malloc (sizeof(hashNode) * newSize);
+    hashNode *tmpHash = NULL;
+    aObj->hashMap.size = newSize;
+    aObj->hashMap.load = 0;
+    for (int i = 0; i < oldSize; i++) {
+        if (oldMap[i] != NULL) {
+            setHashNode(tmpHash, oldMap[i]->field, oldMap[i]->value);
+            newMap[i] = tmpHash;
+            aObj->hashMap.load += 1;
+            free(oldMap[i]);
+        }
+    }
+    aObj->hashMap.nodes = newMap;
+    free(oldMap);
 }
 
-void shortenTable() {
+// void shortenTable(dbObj *aObj) {
 
-}
+// }
 
 void lpush(dbObj *const aObj, const char *buffer) {
     node *newNode = createNode();
@@ -133,7 +149,7 @@ void pushObj(dbObj **oldObj, const int type) {
         newObj = createList();
     }
     else if (type == 3) {
-        newObj = createTable();
+        newObj = createTable(INITIAL_TABLE_SIZE);
     }
     else {
         return;
@@ -227,16 +243,25 @@ void delAfterObj(dbObj *const oldObj) {
 }
 
 void hset(dbObj *const aObj, const char *field, const char *value) {
+    if (aObj->hashMap.load * 1.00 / aObj->hashMap.size > 0.70) {
+        printf("High Load Factor");
+        extendTable(aObj);
+        return;
+    }
+
+
     int pos = getHash(field, aObj->hashMap.size);
     hashNode *const aHash = createHashNode();
 
-    hashNode *cur = (aObj->hashMap.nodes)[pos];
+    hashNode *const cur = (aObj->hashMap.nodes)[pos];
     while (cur != NULL) {
         if (!strcmp(cur->field, field)) {
             free(cur->value);
             int len = strlen(value);
             aHash->value = (char *)malloc(len + 1);
-            strncpy(aHash->value,value+'\0',len);
+            strncpy(aHash->value,value+'\0',len+1);
+            aObj->hashMap.load += 1;
+            printf("%ld", strlen(aHash->value));
             return;
         }
     }

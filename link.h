@@ -5,8 +5,6 @@
 #include <string.h>
 #include "alloc.h"
 
-#define INITIAL_TABLE_SIZE 100
-
 dbObj *createObj();
 node *createNode();
 dbObj *createString();

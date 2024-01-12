@@ -288,6 +288,11 @@ void DBhdel(dbObj **db, const char *key, const char *field) {
         return;
     }
 
+    if (aObj->hashMap.load * 1.00 / aObj->hashMap.size < 0.01) {
+        printf("Low Load Factor");
+        return;
+    }
+
     hashNode *prev = NULL;
     hashNode *cur = (aObj->hashMap.nodes)[pos];
     if (!strcmp(cur->field,field)) {
