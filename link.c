@@ -226,9 +226,21 @@ void delAfterObj(dbObj *const oldObj) {
     return;
 }
 
-void hset(dbObj *aObj, const char *field, const char *value) {
+void hset(dbObj *const aObj, const char *field, const char *value) {
     int pos = getHash(field, aObj->hashMap.size);
-    hashNode *aHash = createHashNode();
+    hashNode *const aHash = createHashNode();
+
+    hashNode *cur = (aObj->hashMap.nodes)[pos];
+    while (cur != NULL) {
+        if (!strcmp(cur->field, field)) {
+            free(cur->value);
+            int len = strlen(value);
+            aHash->value = (char *)malloc(len + 1);
+            strncpy(aHash->value,value+'\0',len);
+            return;
+        }
+    }
+
     setHashNode(aHash, field, value);
     if ((aObj->hashMap.nodes)[pos] == NULL) {
         (aObj->hashMap.nodes)[pos] = aHash;

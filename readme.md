@@ -48,3 +48,4 @@ Bug: Values sometimes mess up. However, same operations not always lead to same 
 Hint: link from the current library to later library
 Bug: using valgrind can find conditional jump without initialized variable
 Some memory leaks(DBfind to hash type)
+Bug on second modify value on hashtable
