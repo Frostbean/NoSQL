@@ -34,8 +34,8 @@ void setHashNode(hashNode *aHash, const char *field, const char *value) {
     size_t len;
     len = strlen(field);
     aHash->field = (char *)malloc(len + 1);
-    strncpy(aHash->field,field+'\0',len);
+    strncpy(aHash->field,field+'\0',len+1);
     len = strlen(value);
     aHash->value = (char *)malloc(len + 1);
-    strncpy(aHash->value,value+'\0',len);
+    strncpy(aHash->value,value+'\0',len+1);
 }

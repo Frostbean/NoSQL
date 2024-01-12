@@ -1,7 +1,7 @@
 #ifndef data_c
 #define data_h
 
-#define INITIAL_TABLE_SIZE 100
+#define INITIAL_TABLE_SIZE 1
 
 // doubly linked list
 typedef struct node {

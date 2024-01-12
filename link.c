@@ -56,12 +56,13 @@ void extendTable(dbObj *const aObj) {
     hashNode **oldMap = aObj->hashMap.nodes;
     int oldSize = aObj->hashMap.size;
     int newSize = 2 * oldSize;
-    hashNode **newMap = malloc (sizeof(hashNode) * newSize);
+    hashNode **newMap = malloc (sizeof(hashNode *) * newSize);
     hashNode *tmpHash = NULL;
     aObj->hashMap.size = newSize;
     aObj->hashMap.load = 0;
     for (int i = 0; i < oldSize; i++) {
         if (oldMap[i] != NULL) {
+            tmpHash = createHashNode();
             setHashNode(tmpHash, oldMap[i]->field, oldMap[i]->value);
             newMap[i] = tmpHash;
             aObj->hashMap.load += 1;
@@ -243,37 +244,41 @@ void delAfterObj(dbObj *const oldObj) {
 }
 
 void hset(dbObj *const aObj, const char *field, const char *value) {
+    printf("%d\n", aObj->hashMap.load);
     if (aObj->hashMap.load * 1.00 / aObj->hashMap.size > 0.70) {
         printf("High Load Factor");
         extendTable(aObj);
         return;
     }
 
-
     int pos = getHash(field, aObj->hashMap.size);
     hashNode *const aHash = createHashNode();
+    hashNode *prev;
+    hashNode *cur = (aObj->hashMap.nodes)[pos];
 
-    hashNode *const cur = (aObj->hashMap.nodes)[pos];
+    // empty field
+    if (cur == NULL) {
+        setHashNode(aHash, field, value);
+        (aObj->hashMap.nodes)[pos] = aHash;
+        aObj->hashMap.load += 1;
+        return;
+    }
+    // hash collision
     while (cur != NULL) {
+        prev = cur;
+        // same field
         if (!strcmp(cur->field, field)) {
-            free(cur->value);
-            int len = strlen(value);
-            aHash->value = (char *)malloc(len + 1);
-            strncpy(aHash->value,value+'\0',len+1);
-            aObj->hashMap.load += 1;
-            printf("%ld", strlen(aHash->value));
+            // free(cur->value);
+            // size_t len = strlen(value);
+            // cur->value = (char *)malloc(len + 1);
+            // strncpy(cur->value,value+'\0',len+1);
             return;
         }
+        cur = cur->next;
     }
-
+    // hash collision but no same field
     setHashNode(aHash, field, value);
-    if ((aObj->hashMap.nodes)[pos] == NULL) {
-        (aObj->hashMap.nodes)[pos] = aHash;
-    }
-    else {
-        // hash collision
-        (aObj->hashMap.nodes)[pos]->next = aHash;
-    }
+    prev->next = aHash;
     return;
 }
 
