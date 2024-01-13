@@ -10,8 +10,10 @@ int setCount(dbObj *aObj);
 int zcount(dbObj *aObj, const int min, const int max);
 void zrange(dbObj *aObj, int start, int stop);
 void zrangebyscore(dbObj *aObj, const int min, const int max);
-void zrank(dbObj *aObj, const char *const key, const char *const member);
+void zrank(dbObj *aObj, const char *const member);
+void zrem(dbObj *aObj, const char *const member);
 void pushSetNode(setNode **oldNode, const int score, const char *value);
+void popSetNode(setNode **oldNode);
 void insertAfterSetNode(setNode *prev, const int score, const char *value);
 void delAfterSetNode(setNode *prev);
 

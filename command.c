@@ -183,6 +183,14 @@ void commandExecution(dbObj **db, const char **input_splited, char **returnValue
             printf("Missing operand.\n");
         }
     }
+    else if (!strcmp(*(input_splited), "zrem")) {
+        if (*(input_splited+1) != NULL && *(input_splited+2) != NULL) {
+            DBzrem(db, *(input_splited+1), *(input_splited+2));
+        }
+        else {
+            printf("Missing operand.\n");
+        }
+    }
     else {
         printf("Unknown Instruction\n");
     }

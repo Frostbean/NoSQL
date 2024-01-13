@@ -109,7 +109,7 @@ void zrangebyscore(dbObj *aObj, const int min, const int max) {
     }
 }
 
-void zrank(dbObj *aObj, const char *const key, const char *const member) {
+void zrank(dbObj *aObj, const char *const member) {
     int index = 0;
     const setNode *cur = aObj->set;
     while (cur != NULL) {
@@ -121,6 +121,27 @@ void zrank(dbObj *aObj, const char *const key, const char *const member) {
         cur = cur->next;
     }
     printf("(nil)\n");
+}
+
+void zrem(dbObj *aObj, const char *const member) {
+    setNode *cur = aObj->set;
+    if (cur == NULL) {
+        return;
+    }
+    if (!strcmp(cur->member, member)) {
+        popSetNode(&(aObj->set));
+        return;
+    }
+    setNode *prev;
+    while (cur != NULL) {
+        if (!strcmp(cur->member, member)) {
+            delAfterSetNode(prev);
+            return;
+        }
+        prev = cur;
+        cur = cur->next;
+    }
+    printf("No corresponding member.\n");
 }
 
 void pushSetNode(setNode **oldNode, const int score, const char *value) {
@@ -151,6 +172,16 @@ void insertAfterSetNode(setNode *prev, const int score, const char *value) {
     setValueSet(newNode, value);
     newNode->score = score;
     return;    
+}
+
+void popSetNode(setNode **oldNode) {
+    setNode *delNode = *oldNode;
+    if (*oldNode == NULL) {
+        return;
+    }
+    *oldNode = (*oldNode)->next;
+    freeSetNode(delNode);
+    return;
 }
 
 void delAfterSetNode(setNode *prev) {
