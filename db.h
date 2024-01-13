@@ -26,5 +26,6 @@ void DBhget(dbObj **db, const char *key, const char *field, char **returnValue);
 void DBhdel(dbObj **db, const char *key, const char *field);
 void DBzadd(dbObj **db, const char *key, const int score, const char *value);
 void DBzcard(dbObj **db, const char *key);
+void DBzcount(dbObj **const db, const char *const key, int min, int max);
 
 #endif

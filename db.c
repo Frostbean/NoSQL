@@ -345,3 +345,20 @@ void DBzcard(dbObj **db, const char *key) {
     }
     printf("Set size: %d\n", setCount(aObj));    
 }
+
+void DBzcount(dbObj **const db, const char *const key, int min, int max) {
+    dbObj *aObj = DBfind(db , key);
+    if (aObj == NULL) {
+        printf("(nil)\n");
+        return;
+    }
+    if (aObj->type != 2) {
+        printf("Invalid type\n");
+        return;
+    }
+    if (zcount(aObj, min, max) == -1) {
+        printf("(empty set)\n");
+        return;
+    }
+    printf("Count: %d\n", zcount(aObj, min, max));
+}

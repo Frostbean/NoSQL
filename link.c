@@ -398,6 +398,27 @@ int setCount(dbObj *aObj) {
     return count;
 }
 
+int zcount(dbObj *aObj, const int min, const int max) {
+    const setNode *cur = aObj->set;
+    int len = setCount(aObj);
+    if (len == 0) {
+        return -1;
+    }
+    int count = 0;
+    while (cur != NULL) {
+        if (cur->score < min) {
+            cur = cur->next;
+            continue;
+        }
+        if (cur->score > max) {
+            break;
+        }
+        count += 1;
+        cur = cur->next;
+    }
+    return count;
+}
+
 void pushSetNode(setNode **oldNode, const int score, const char *value) {
     setNode *newNode = createSetNode();
     if (*oldNode == NULL) {
