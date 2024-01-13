@@ -30,7 +30,7 @@ Sorted Set Type Processing
 * ZRANGEBYSCORE
 * ZRANK
 * ZREM
-* ZREMRANGEBYSCORE - dev
+* ZREMRANGEBYSCORE
 
 # How to use
 make

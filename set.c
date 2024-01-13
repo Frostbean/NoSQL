@@ -6,11 +6,11 @@ void zadd(dbObj *const aObj, const int score, const char *member) {
         pushSetNode(&(aObj->set), score, member);
         return;
     }
-    // find same member
+    // find same member, alittle bit tricky
     while (cur != NULL) {
         if (!strcmp(cur->member, member)) {
-            cur->score = score;
-            return;
+            zrem(aObj, member);
+            break;
         }
         cur = cur->next;
     }
