@@ -12,7 +12,7 @@ typedef struct node {
 
 typedef struct setNode {
     int score;
-    char *value;
+    char *member;
     struct setNode *next;
 } setNode;
 

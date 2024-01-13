@@ -62,7 +62,7 @@ hashNode *createHashNode() {
 setNode *createSetNode() {
     setNode *aSet = (setNode *)malloc(sizeof(setNode));
     aSet->score = 0;
-    aSet->value = NULL;
+    aSet->member = NULL;
     aSet->next = NULL;
     return aSet;
 }
@@ -262,7 +262,7 @@ void freeTable(dbObj *const delObj) {
 }
 
 void freeSetNode(setNode *aNode) {
-    free(aNode->value);
+    free(aNode->member);
     free(aNode);
 }
 

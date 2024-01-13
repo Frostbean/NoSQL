@@ -47,6 +47,6 @@ void setValueSet(setNode *aNode, const char *buffer) {
     // if (aNode->value) {
     //     free(aNode->value);
     // }
-    aNode->value = (char *)malloc(len + 1);
-    strncpy(aNode->value,buffer+'\0',len+1);
+    aNode->member = (char *)malloc(len + 1);
+    strncpy(aNode->member,buffer+'\0',len+1);
 }
