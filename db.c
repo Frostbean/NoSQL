@@ -389,3 +389,16 @@ void DBzrangebyscore(dbObj **const db, const char *const key, const int min, con
     }
     zrangebyscore(aObj, min, max);
 }
+
+void DBzrank(dbObj **const db, const char *const key, const char *const member) {
+    dbObj *aObj = DBfind(db , key);
+    if (aObj == NULL) {
+        printf("(nil)\n");
+        return;
+    }
+    if (aObj->type != 2) {
+        printf("Invalid type\n");
+        return;
+    }
+    zrank(aObj, key, member);
+}

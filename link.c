@@ -468,6 +468,20 @@ void zrangebyscore(dbObj *aObj, const int min, const int max) {
     }
 }
 
+void zrank(dbObj *aObj, const char *const key, const char *const member) {
+    int index = 0;
+    const setNode *cur = aObj->set;
+    while (cur != NULL) {
+        if (!strcmp(cur->member, member)) {
+            printf("(integer) %d\n", index);
+            return;
+        }
+        index += 1;
+        cur = cur->next;
+    }
+    printf("(nil)\n");
+}
+
 void pushSetNode(setNode **oldNode, const int score, const char *value) {
     setNode *newNode = createSetNode();
     if (*oldNode == NULL) {

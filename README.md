@@ -27,8 +27,8 @@ Sorted Set Type Processing
 * ZINTERSTORE - dev
 * ZUNIONSTORE - dev
 * ZRANGE
-* ZRANGEBYSCORE - dev
-* ZRANK - dev
+* ZRANGEBYSCORE
+* ZRANK
 * ZREM - dev
 * ZREMBYSCORE - dev
 
