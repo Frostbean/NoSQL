@@ -24,5 +24,6 @@ void DBrpop(dbObj **db, const char *key, char **returnValue);
 void DBhset(dbObj **db, const char *key, const char *field, const char *value);
 void DBhget(dbObj **db, const char *key, const char *field, char **returnValue);
 void DBhdel(dbObj **db, const char *key, const char *field);
+void DBzadd(dbObj **db, const char *key, const int score, const char *value);
 
 #endif

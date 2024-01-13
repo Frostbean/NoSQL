@@ -359,10 +359,33 @@ void delAfterHashNode(hashNode *prevHash) {
     return;
 }
 
-void zadd(dbObj *aObj, const int score, const char *value) {
-    if (aObj->set == NULL) {
-        pushSetNode(&(aObj->set), score, value);
+void zadd(dbObj *const aObj, const int score, const char *member) {
+    setNode *cur = aObj->set;
+    if (cur == NULL) {
+        pushSetNode(&(aObj->set), score, member);
+        return;
     }
+    // find same member
+    while (cur != NULL) {
+        if (!strcmp(cur->member, member)) {
+            cur->score = score;
+            return;
+        }
+        cur = cur->next;
+    }
+    // no same member
+    setNode *prev;
+    cur = aObj->set;
+    while (cur != NULL) {
+        prev = cur;
+        if (cur->score > score) {
+            insertAfterSetNode(prev, score, member);
+            return;
+        }
+        cur = cur->next;
+    }
+    insertAfterSetNode(prev, score, member);
+    return;
 }
 
 void pushSetNode(setNode **oldNode, const int score, const char *value) {
