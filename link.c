@@ -376,6 +376,10 @@ void zadd(dbObj *const aObj, const int score, const char *member) {
     // no same member
     setNode *prev;
     cur = aObj->set;
+    if (cur->score > score) {
+        pushSetNode(&(aObj->set), score, member);
+        return;
+    }
     while (cur != NULL) {
         prev = cur;
         if (cur->score > score) {
@@ -400,8 +404,7 @@ int setCount(dbObj *aObj) {
 
 int zcount(dbObj *aObj, const int min, const int max) {
     const setNode *cur = aObj->set;
-    int len = setCount(aObj);
-    if (len == 0) {
+    if (cur == NULL) {
         return -1;
     }
     int count = 0;
@@ -417,6 +420,32 @@ int zcount(dbObj *aObj, const int min, const int max) {
         cur = cur->next;
     }
     return count;
+}
+
+void zrange(dbObj *aObj, int start, int stop) {
+    const setNode *cur = aObj->set;
+    int count = 0;     // number of found node
+    int pos = 0;       // current position
+    int len = setCount(aObj);
+    if (cur == NULL) {
+        printf("(empty set)\n");
+    }
+    if (start < 0) {
+        start = len + start;
+    }
+    if (stop < 0) {
+        stop = len + stop;
+    }
+    while (cur != NULL && pos < start) {
+        pos++;
+        cur = cur->next;
+    }
+    while (cur != NULL && pos <= stop) {
+        count++;
+        pos++;
+        printf("%d) %s\n", count, cur->member);
+        cur = cur->next;
+    }
 }
 
 void pushSetNode(setNode **oldNode, const int score, const char *value) {

@@ -356,9 +356,23 @@ void DBzcount(dbObj **const db, const char *const key, int min, int max) {
         printf("Invalid type\n");
         return;
     }
-    if (zcount(aObj, min, max) == -1) {
+    const int count = zcount(aObj, min, max);
+    if (count == -1) {
         printf("(empty set)\n");
         return;
     }
-    printf("Count: %d\n", zcount(aObj, min, max));
+    printf("Count: %d\n", count);
+}
+
+void DBzrange(dbObj **const db, const char *const key, const int start, const int stop) {
+    dbObj *aObj = DBfind(db , key);
+    if (aObj == NULL) {
+        printf("(nil)\n");
+        return;
+    }
+    if (aObj->type != 2) {
+        printf("Invalid type\n");
+        return;
+    }
+    zrange(aObj, start, stop);
 }

@@ -22,11 +22,11 @@ Hash Type Processing
 # HW5
 Sorted Set Type Processing
 * ZADD
-* ZCARD - dev
-* ZCOUNT - dev
+* ZCARD
+* ZCOUNT
 * ZINTERSTORE - dev
 * ZUNIONSTORE - dev
-* ZRANGE - dev
+* ZRANGE
 * ZRANGEBYSCORE - dev
 * ZRANK - dev
 * ZREM - dev
