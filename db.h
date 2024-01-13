@@ -36,5 +36,6 @@ void DBzrange(dbObj **const db, const char *const key, const int start, const in
 void DBzrangebyscore(dbObj **const db, const char *const key, const int min, const int max);
 void DBzrank(dbObj **const db, const char *const key, const char *const member);
 void DBzrem(dbObj **const db, const char *const key, const char *const member);
+void DBzremrangebyscore(dbObj **const db, const char *const key, const int min, const int max);
 
 #endif

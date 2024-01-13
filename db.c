@@ -415,3 +415,16 @@ void DBzrem(dbObj **const db, const char *const key, const char *const member) {
     }
     zrem(aObj, member);
 }
+
+void DBzremrangebyscore(dbObj **const db, const char *const key, const int min, const int max) {
+    dbObj *aObj = DBfind(db , key);
+    if (aObj == NULL) {
+        printf("(nil)\n");
+        return;
+    }
+    if (aObj->type != 2) {
+        printf("Invalid type\n");
+        return;
+    }
+    zremrangebyscore(aObj, min, max);
+}

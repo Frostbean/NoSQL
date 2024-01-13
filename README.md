@@ -29,8 +29,8 @@ Sorted Set Type Processing
 * ZRANGE
 * ZRANGEBYSCORE
 * ZRANK
-* ZREM - dev
-* ZREMBYSCORE - dev
+* ZREM
+* ZREMRANGEBYSCORE - dev
 
 # How to use
 make

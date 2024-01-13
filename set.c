@@ -144,6 +144,37 @@ void zrem(dbObj *aObj, const char *const member) {
     printf("No corresponding member.\n");
 }
 
+void zremrangebyscore(dbObj *aObj, const int min, const int max) {
+    if (aObj->set == NULL) {
+        printf("(empty set)\n");
+        return;
+    }
+    while (aObj->set->score >= min && aObj->set->score <= max) {
+        popSetNode(&(aObj->set));
+        if (aObj->set == NULL) {
+            return;
+        }
+    }
+    if (aObj->set == NULL) {
+        return;
+    }
+    setNode *prev = NULL;
+    setNode *cur = aObj->set;
+    while (cur != NULL) {
+        if (cur->score >= min && cur->score <= max) {
+            delAfterSetNode(prev);
+            cur = prev->next;
+            continue;
+        }
+        else if (cur->score > max) {
+            break;
+        }
+        prev = cur;
+        cur = cur->next;
+    }
+    printf("finished\n");
+}
+
 void pushSetNode(setNode **oldNode, const int score, const char *value) {
     setNode *newNode = createSetNode();
     if (*oldNode == NULL) {
