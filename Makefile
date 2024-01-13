@@ -4,7 +4,7 @@ CC=gcc
 CFLAGS=-Wall -g
 LDFLAGS=-L.
 TARGET=libdatabase.so
-OBJECT = alloc.o link.o input.o db.o command.o murmurhash.o hash.o
+OBJECT = alloc.o link.o input.o db.o command.o murmurhash.o hash.o set.o
 LIBRARY = libdatabase.so
 
 .PHONY: all clean

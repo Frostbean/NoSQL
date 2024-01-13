@@ -4,7 +4,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#ifndef link_h
 #include "link.h"
+#endif
+#ifndef set_h
+#include "set.h"
+#endif
 #include "hash.h"
 
 #define streql !strcmp

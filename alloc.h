@@ -3,7 +3,9 @@
 
 #include <stdlib.h>
 #include <string.h>
+#ifndef data_h
 #include "data.h"
+#endif
 #include "hash.h"
 
 void setKey(dbObj *aObj, const char *buffer);
