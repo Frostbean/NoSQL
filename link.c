@@ -44,12 +44,27 @@ dbObj *createTable(int size) {
     return aObj;
 }
 
+dbObj *createSet() {
+    dbObj *aObj = createObj();
+    aObj->set = NULL;
+    aObj->type = 2;
+    return aObj;
+}
+
 hashNode *createHashNode() {
     hashNode *aHash = (hashNode *)malloc(sizeof(hashNode));
     aHash->field = NULL;
     aHash->value = NULL;
     aHash->next = NULL;
     return aHash;
+}
+
+setNode *createSetNode() {
+    setNode *aSet = (setNode *)malloc(sizeof(setNode));
+    aSet->score = 0;
+    aSet->value = NULL;
+    aSet->next = NULL;
+    return aSet;
 }
 
 void extendTable(dbObj *const aObj) {
@@ -334,4 +349,34 @@ void delAfterHashNode(hashNode *prevHash) {
     prevHash->next = prevHash->next->next;
     freeHashNode(delHash);
     return;
+}
+
+void pushSetNode(setNode **oldNode, const int score, const char *value) {
+    setNode *newNode = createSetNode();
+    if (*oldNode == NULL) {
+        *oldNode = newNode;
+        setValueSet(newNode, value);
+        newNode->score = score;
+        return;
+    }
+    newNode->next = *oldNode;
+    setValueSet(newNode, value);
+    newNode->score = score;
+    *oldNode = newNode;
+    return;
+}
+
+void insertAfterSetNode(setNode *prev, const int score, const char *value) {
+    setNode *newNode = createSetNode();
+    if (prev->next == NULL) {
+        prev->next = newNode;
+        setValueSet(newNode, value);
+        newNode->score = score;
+        return;
+    }
+    newNode->next = prev->next;
+    prev->next = newNode;
+    setValueSet(newNode, value);
+    newNode->score = score;
+    return;    
 }

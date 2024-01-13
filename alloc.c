@@ -44,9 +44,9 @@ void setValueSet(setNode *aNode, const char *buffer) {
     size_t len;
     // what about sizeof
     len = strlen(buffer);
-    if (aNode->value) {
-        free(aNode->value);
-    }
+    // if (aNode->value) {
+    //     free(aNode->value);
+    // }
     aNode->value = (char *)malloc(len + 1);
     strncpy(aNode->value,buffer+'\0',len+1);
 }
