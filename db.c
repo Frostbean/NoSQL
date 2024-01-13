@@ -315,3 +315,19 @@ void DBhdel(dbObj **db, const char *key, const char *field) {
     delAfterHashNode(prev);
     return;
 }
+
+void DBzadd(dbObj **db, const char *key, const int score, const char *value) {
+    dbObj *aObj = DBfind(db,key);
+    // if key doesn't exist, create and set newNode
+    if (!aObj) {
+        pushObj(db, 2);
+        aObj = *db;
+        setKey(aObj,key);
+    }
+    if (aObj->type != 2) {
+        printf("Invalid type\n");
+        return;
+    }
+    zadd(aObj, score, value);
+    printf("OK\n"); 
+}

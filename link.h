@@ -25,5 +25,9 @@ void popHashNode(const dbObj *aObj, const int pos);
 void delAfterHashNode(hashNode *prevHash);
 void extendTable(dbObj *const aObj);
 void shortenTable(dbObj *const aObj);
+void zadd(dbObj *aObj, const int score, const char *value);
+void pushSetNode(setNode **oldNode, const int score, const char *value);
+void insertAfterSetNode(setNode *prev, const int score, const char *value);
+void delAfterSetNode(setNode *prev);
 
 #endif

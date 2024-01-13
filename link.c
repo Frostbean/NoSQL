@@ -203,6 +203,9 @@ void pushObj(dbObj **oldObj, const int type) {
     else if (type == 1) {
         newObj = createList();
     }
+    else if (type == 2) {
+        newObj = createSet();
+    }
     else if (type == 3) {
         newObj = createTable(INITIAL_TABLE_SIZE);
     }
@@ -256,6 +259,11 @@ void freeTable(dbObj *const delObj) {
     }
     free(delObj->hashMap.nodes);
     free(delObj);
+}
+
+void freeSetNode(setNode *aNode) {
+    free(aNode->value);
+    free(aNode);
 }
 
 void popObj(dbObj **const oldObj) {
@@ -351,6 +359,12 @@ void delAfterHashNode(hashNode *prevHash) {
     return;
 }
 
+void zadd(dbObj *aObj, const int score, const char *value) {
+    if (aObj->set == NULL) {
+        pushSetNode(&(aObj->set), score, value);
+    }
+}
+
 void pushSetNode(setNode **oldNode, const int score, const char *value) {
     setNode *newNode = createSetNode();
     if (*oldNode == NULL) {
@@ -379,4 +393,11 @@ void insertAfterSetNode(setNode *prev, const int score, const char *value) {
     setValueSet(newNode, value);
     newNode->score = score;
     return;    
+}
+
+void delAfterSetNode(setNode *prev) {
+    setNode *delNode = prev->next;
+    prev->next = prev->next->next;
+    freeSetNode(delNode);
+    return;
 }
