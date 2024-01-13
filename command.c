@@ -162,6 +162,19 @@ void commandExecution(dbObj **db, const char **input_splited, char **returnValue
             printf("Missing operand.\n");
         }
     }
+    else if (!strcmp(*(input_splited), "zrangebyscore")) {
+        if (*(input_splited+1) != NULL && *(input_splited+2) != NULL && *(input_splited+3) != NULL) {
+            if (isNumber(*(input_splited+2)) && isNumber(*(input_splited+3))) {
+                DBzrangebyscore(db, *(input_splited+1), atoi(*(input_splited+2)), atoi(*(input_splited+3)));
+            }
+            else {
+                printf("Min and max must be numbers.\n");
+            }
+        }
+        else {
+            printf("Missing operand.\n");
+        }
+    }
     else {
         printf("Unknown Instruction\n");
     }

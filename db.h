@@ -28,5 +28,6 @@ void DBzadd(dbObj **db, const char *key, const int score, const char *value);
 void DBzcard(dbObj **db, const char *key);
 void DBzcount(dbObj **const db, const char *const key, int min, int max);
 void DBzrange(dbObj **const db, const char *const key, const int start, const int stop);
+void DBzrangebyscore(dbObj **const db, const char *const key, const int min, const int max);
 
 #endif

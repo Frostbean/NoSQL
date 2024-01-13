@@ -448,6 +448,26 @@ void zrange(dbObj *aObj, int start, int stop) {
     }
 }
 
+void zrangebyscore(dbObj *aObj, const int min, const int max) {
+    const setNode *cur = aObj->set;
+    if (cur == NULL) {
+        printf("(empty set)\n");
+    }
+    int count = 0;
+    while (cur != NULL) {
+        if (cur->score < min) {
+            cur = cur->next;
+            continue;
+        }
+        if (cur->score > max) {
+            break;
+        }
+        count += 1;
+        printf("%d) %s\n", count, cur->member);
+        cur = cur->next;
+    }
+}
+
 void pushSetNode(setNode **oldNode, const int score, const char *value) {
     setNode *newNode = createSetNode();
     if (*oldNode == NULL) {
