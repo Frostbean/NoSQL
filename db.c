@@ -331,3 +331,17 @@ void DBzadd(dbObj **db, const char *key, const int score, const char *value) {
     zadd(aObj, score, value);
     printf("OK\n"); 
 }
+
+void DBzcard(dbObj **db, const char *key) {
+    dbObj *aObj = DBfind(db,key);
+    // if key doesn't exist, create and set newNode
+    if (!aObj) {
+        printf("(nil)\n");
+        return;
+    }
+    if (aObj->type != 2) {
+        printf("Invalid type\n");
+        return;
+    }
+    printf("Set size: %d\n", setCount(aObj));    
+}

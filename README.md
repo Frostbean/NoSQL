@@ -21,7 +21,7 @@ Hash Type Processing
 
 # HW5
 Sorted Set Type Processing
-* ZADD - dev
+* ZADD
 * ZCARD - dev
 * ZCOUNT - dev
 * ZINTERSTORE - dev

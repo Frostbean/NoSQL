@@ -128,6 +128,14 @@ void commandExecution(dbObj **db, const char **input_splited, char **returnValue
             printf("Missing operand.\n");
         }
     }
+    else if (!strcmp(*(input_splited), "zcard")) {
+        if (*(input_splited+1) != NULL) {
+            DBzcard(db, *(input_splited+1));
+        }
+        else {
+            printf("Missing operand.\n");
+        }
+    }
     else {
         printf("Unknown Instruction\n");
     }

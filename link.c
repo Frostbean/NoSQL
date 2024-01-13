@@ -388,6 +388,16 @@ void zadd(dbObj *const aObj, const int score, const char *member) {
     return;
 }
 
+int setCount(dbObj *aObj) {
+    setNode *cur = aObj->set;
+    int count = 0;
+    while (cur != NULL) {
+        count++;
+        cur = cur->next;
+    }
+    return count;
+}
+
 void pushSetNode(setNode **oldNode, const int score, const char *value) {
     setNode *newNode = createSetNode();
     if (*oldNode == NULL) {
