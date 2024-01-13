@@ -27,7 +27,7 @@ void setValueList(node *aNode, const char *buffer) {
         free(aNode->value);
     }
     aNode->value = (char *)malloc(len + 1);
-    strncpy(aNode->value,buffer+'\0',len);
+    strncpy(aNode->value,buffer+'\0',len+1);
 }
 
 void setHashNode(hashNode *aHash, const char *field, const char *value) {
@@ -38,4 +38,15 @@ void setHashNode(hashNode *aHash, const char *field, const char *value) {
     len = strlen(value);
     aHash->value = (char *)malloc(len + 1);
     strncpy(aHash->value,value+'\0',len+1);
+}
+
+void setValueSet(setNode *aNode, const char *buffer) {
+    size_t len;
+    // what about sizeof
+    len = strlen(buffer);
+    if (aNode->value) {
+        free(aNode->value);
+    }
+    aNode->value = (char *)malloc(len + 1);
+    strncpy(aNode->value,buffer+'\0',len+1);
 }

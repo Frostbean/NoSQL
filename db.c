@@ -272,7 +272,7 @@ void DBhget(dbObj **db, const char *key, const char *field, char **returnValue) 
 }
 
 void DBhdel(dbObj **db, const char *key, const char *field) {
-    const dbObj *aObj = DBfind(db,key);
+    dbObj *const aObj = DBfind(db,key);
     if (aObj == NULL) {
         printf("(nil)\n");
         return;

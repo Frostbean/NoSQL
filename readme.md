@@ -19,6 +19,19 @@ Hash Type Processing
 * HGET
 * HDEL
 
+# HW5
+Sorted Set Type Processing
+* ZADD - dev
+* ZCARD - dev
+* ZCOUNT - dev
+* ZINTERSTORE - dev
+* ZUNIONSTORE - dev
+* ZRANGE - dev
+* ZRANGEBYSCORE - dev
+* ZRANK - dev
+* ZREM - dev
+* ZREMBYSCORE - dev
+
 # How to use (new)
 make
 gcc main.c -L. -ldatabase -o main

@@ -1,7 +1,7 @@
 #ifndef data_c
 #define data_h
 
-#define INITIAL_TABLE_SIZE 1
+#define INITIAL_TABLE_SIZE 100
 
 // doubly linked list
 typedef struct node {
@@ -10,19 +10,19 @@ typedef struct node {
     struct node *right;
 } node;
 
+typedef struct setNode {
+    int score;
+    char *value;
+    struct setNode *next;
+} setNode;
+
 typedef struct hashNode {
     char *field;
     char *value;
     struct hashNode *next;
 } hashNode;
 
-// typedef struct hashMap {
-//     int size;
-//     int load;
-//     hashNode **nodes;
-// } hashMap;
-
-// type 0: string, type 1: list, type 3: hash
+// type 0: string, type 1: list, type 2: sorted set, type 3: hash
 typedef struct dbObj {
     char *key;
     union {
@@ -31,11 +31,12 @@ typedef struct dbObj {
             node *leftMost;  // type 1, leftmost node of list
             node *rightMost; // type 1, rightmost node of list
         } list;
+        setNode *set;  // type 2
         struct {
             int size;
             int load;
             hashNode **nodes;
-        } hashMap;
+        } hashMap;      // type 3
     };
     struct dbObj *next;
     int type;
