@@ -204,6 +204,19 @@ void commandExecution(dbObj **db, const char **input_splited, char **returnValue
             printf("Missing operand.\n");
         }
     }
+    else if (!strcmp(*(input_splited), "zunionstore")) {
+        if (*(input_splited+1) != NULL && *(input_splited+2) != NULL) {
+            if (isNumber(*(input_splited+2))) {
+                DBzunionstore(db, *(input_splited+1), atoi(*(input_splited+2)), input_splited);
+            }
+            else {
+                printf("Numkeys has to be a number.\n");
+            }
+        }
+        else {
+            printf("Missing operand.\n");
+        }
+    }
     else {
         printf("Unknown Instruction\n");
     }

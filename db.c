@@ -428,3 +428,38 @@ void DBzremrangebyscore(dbObj **const db, const char *const key, const int min, 
     }
     zremrangebyscore(aObj, min, max);
 }
+
+void DBzunionstore(dbObj **const db, const char *destination, const int numkeys, const char **const input_splited) {
+    dbObj *desObj = DBfind(db, destination);
+    // if key doesn't exist, create and set newNode
+    if (!desObj) {
+        pushObj(db, 2);
+        desObj = *db;
+        setKey(desObj, destination);
+    }
+    else {
+        printf("Destination has been used.\n");
+        return;
+    }
+    for (int i = 0; i < numkeys; i++) {
+        if (*(input_splited+i+3) == NULL) {
+            printf("Not enough keys\n");
+            popObj(db);
+            return;
+        }
+        dbObj *souObj = DBfind(db , *(input_splited+i+3));
+        if (souObj == NULL) {
+            printf("The key \"%s\" is (nil)\n", *(input_splited+i+3));
+            printf("in\n");
+            popObj(db);
+            printf("out\n");
+            return;
+        }
+        if (souObj->type != 2) {
+            printf("The key \"%s\" has invalid type\n", *(input_splited+i+3));
+            popObj(db);
+            return;
+        }
+        zunionstore(desObj, souObj);
+    }
+}

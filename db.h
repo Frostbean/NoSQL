@@ -37,5 +37,6 @@ void DBzrangebyscore(dbObj **const db, const char *const key, const int min, con
 void DBzrank(dbObj **const db, const char *const key, const char *const member);
 void DBzrem(dbObj **const db, const char *const key, const char *const member);
 void DBzremrangebyscore(dbObj **const db, const char *const key, const int min, const int max);
+void DBzunionstore(dbObj **const db, const char *destination, const int numkeys, const char **input_splited);
 
 #endif

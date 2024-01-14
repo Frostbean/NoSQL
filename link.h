@@ -4,6 +4,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include "alloc.h"
+#ifndef set_h
+#include "set.h"
+#endif
 
 dbObj *createObj();
 node *createNode();

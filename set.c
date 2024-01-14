@@ -175,6 +175,77 @@ void zremrangebyscore(dbObj *aObj, const int min, const int max) {
     printf("finished\n");
 }
 
+void zunionstore(dbObj *desObj, dbObj *souObj) {
+    setNode *preDes = NULL;
+    setNode *curDes = desObj->set;
+    setNode *curSou = souObj->set;
+    setNode *tmpDes = NULL;
+    // ckeck if source->member in destination->member
+    if (curDes != NULL) {
+        tmpDes = desObj->set;
+        while (tmpDes != NULL && curSou != NULL) {
+            if (!strcmp(tmpDes->member, curSou->member)) {
+                tmpDes->score += curSou->score;
+                curSou = curSou->next;
+                tmpDes = desObj->set;
+            }
+            tmpDes = tmpDes->next;
+        }
+    }
+    // add to head
+    if (curDes == NULL) {
+        // normal condition
+        pushSetNode(&(desObj->set), curSou->score, curSou->member);
+        curSou = curSou->next;
+    }
+    else if (curDes->score > curSou->score) {        
+        // normal condition
+        pushSetNode(&(desObj->set), curSou->score, curSou->member);
+        curSou = curSou->next;        
+    }
+    // add to mid
+    curDes = desObj->set;
+    while (curSou != NULL && curDes != NULL) {
+        // check if member had exist
+        tmpDes = desObj->set;
+        while (tmpDes != NULL && curSou != NULL) {
+            if (!strcmp(tmpDes->member, curSou->member)) {
+                tmpDes->score += curSou->score;
+                curSou = curSou->next;
+                tmpDes = desObj->set;
+            }
+            tmpDes = tmpDes->next;
+        }
+        // normal condition
+        // basically not happened at first loop
+        if (curSou != NULL && curDes->score > curSou->score) {
+            insertAfterSetNode(preDes, curSou->score, curSou->member);
+            curSou = curSou->next;
+        }
+        preDes = curDes;
+        curDes = curDes->next;
+    }
+    // add to tail
+    while (curSou != NULL) {
+        // check if member had exist
+        tmpDes = desObj->set;
+        while (tmpDes != NULL && curSou != NULL) {
+            if (!strcmp(tmpDes->member, curSou->member)) {
+                tmpDes->score += curSou->score;
+                curSou = curSou->next;
+                tmpDes = desObj->set;
+            }
+            tmpDes = tmpDes->next;
+        }
+        // normal condition
+        if (curSou != NULL) {
+            insertAfterSetNode(preDes, curSou->score, curSou->member);
+            curSou = curSou->next;
+        }
+    }
+    printf("Finished\n");
+}
+
 void pushSetNode(setNode **oldNode, const int score, const char *value) {
     setNode *newNode = createSetNode();
     if (*oldNode == NULL) {
@@ -220,4 +291,12 @@ void delAfterSetNode(setNode *prev) {
     prev->next = prev->next->next;
     freeSetNode(delNode);
     return;
+}
+
+void freeSet(dbObj *delObj) {
+    free(delObj->key);
+    while (delObj->set != NULL) {
+        popSetNode(&(delObj->set));
+    }
+    free(delObj);
 }

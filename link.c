@@ -283,6 +283,9 @@ void popObj(dbObj **const oldObj) {
     else if (delObj->type == 1) {
         freeList(delObj);
     }
+    else if (delObj->type == 2) {
+        freeSet(delObj);
+    }
     else if (delObj->type == 3) {
         freeTable(delObj);
     }

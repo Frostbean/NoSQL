@@ -16,13 +16,13 @@ int main() {
     splitInput(input_splited, input_buffer, " ", INPUT_MAX_WORDS);
 
     while (strcmp(input_buffer, "quit")) {
-        // dumpInput(input_splited);
-
         commandExecution(&db, input_splited, &returnBuffer);
 
         readInput(input_buffer);
         removeEOL(input_buffer, strlen(input_buffer));
         splitInput(input_splited, input_buffer, " ", INPUT_MAX_WORDS);
+
+        // dumpInput(input_splited);
     }
 
     // clear database
